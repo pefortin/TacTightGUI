@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haptistrap - Scientific Data Processing Interface</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Haptistrap</h1>
+                <p class="hero-subtitle">Scientific Data Processing Interface</p>
+                <p class="hero-description">Advanced analysis of width and force parameters with automatic report generation</p>
+                <button onclick="scrollToSection('how-to-use')" class="hero-cta">Start Analysis</button>
+            </div>
+        </div>
+        <div class="hero-background">
+            <div class="geometric-pattern"></div>
+        </div>
+    </section>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav" id="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Haptistrap</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#problematiques" onclick="scrollToSection('problematiques')">Problematic</a></li>
+                <li><a href="#info-generale" onclick="scrollToSection('info-generale')">Information</a></li>
+                <li><a href="#how-to-use" onclick="scrollToSection('how-to-use')">Usage</a></li>
+                <li><a href="#auteurs" onclick="scrollToSection('auteurs')">Authors</a></li>
+                <li><a href="#publications" onclick="scrollToSection('publications')">Publications</a></li>
+            </ul>
+            <div class="nav-toggle" onclick="toggleMobileNav()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Progress Thread - Fil Conducteur -->
+    <div class="progress-thread">
+        <div class="thread-line"></div>
+        <div class="progress-line" id="progress-line"></div>
+        
+        <div class="thread-step" data-section="problematiques">
+            <div class="step-circle">01</div>
+            <div class="step-label">Problematics</div>
+        </div>
+        
+        <div class="thread-step" data-section="info-generale">
+            <div class="step-circle">02</div>
+            <div class="step-label">Architecture</div>
+        </div>
+        
+        <div class="thread-step" data-section="how-to-use">
+            <div class="step-circle">03</div>
+            <div class="step-label">Interface</div>
+        </div>
+        
+        <div class="thread-step" data-section="auteurs">
+            <div class="step-circle">04</div>
+            <div class="step-label">Team</div>
+        </div>
+        
+        <div class="thread-step" data-section="publications">
+            <div class="step-circle">05</div>
+            <div class="step-label">Publications</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Problématiques Section -->
+        <section id="problematiques" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Scientific Problematic</h2>
+                    <div class="section-divider"></div>
+                </div>
+                <div class="section-content">
+                    <div class="intro-text">
+                        <p class="lead-paragraph">This research addresses fundamental Problematic in processing and analyzing complex physical parameters, particularly interactions between width and force in dynamic systems.</p>
+                    </div>
+                    
+                    <div class="research-grid">
+                        <div class="research-card">
+                            <div class="card-icon">⚡</div>
+                            <h3>Efficient Processing</h3>
+                            <p>Development of optimized algorithms for real-time processing of width and force parameters</p>
+                        </div>
+                        <div class="research-card">
+                            <div class="card-icon">📈</div>
+                            <h3>Data Precision</h3>
+                            <p>Generation of precise data based on advanced mathematical models and statistical calculations</p>
+                        </div>
+                        <div class="research-card">
+                            <div class="card-icon">🎨</div>
+                            <h3>Intuitive Interface</h3>
+                            <p>Design of a modern and accessible user interface for researchers and scientists</p>
+                        </div>
+                        <div class="research-card">
+                            <div class="card-icon">💾</div>
+                            <h3>Advanced Export</h3>
+                            <p>Flexible export system with support for multiple standardized scientific formats</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Informations Générales Section -->
+        <section id="info-generale" class="content-section alt-bg">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Architecture & Methodology</h2>
+                    <div class="section-divider"></div>
+                </div>
+                <div class="section-content">
+                    <div class="methodology-intro">
+                        <p class="lead-paragraph">Haptistrap represents an innovative approach combining modern web technologies with the rigorous requirements of scientific research.</p>
+                    </div>
+                    
+                    <div class="tech-stack">
+                        <div class="tech-card">
+                            <div class="tech-header">
+                                <h3>Scientific Backend</h3>
+                                <div class="tech-badge">Python</div>
+                            </div>
+                            <p>FastAPI with scientific computing algorithms, data validation and CORS support for cross-platform integration</p>
+                            <ul class="tech-features">
+                                <li>Real-time calculations</li>
+                                <li>Parameter validation</li>
+                                <li>Documented RESTful API</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-header">
+                                <h3>Modern Interface</h3>
+                                <div class="tech-badge">JavaScript</div>
+                            </div>
+                            <p>Responsive frontend with vanilla JavaScript, optimized for complex scientific data visualization</p>
+                            <ul class="tech-features">
+                                <li>Adaptive interface</li>
+                                <li>Interactive visualizations</li>
+                                <li>Intuitive navigation</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-header">
+                                <h3>Advanced Features</h3>
+                                <div class="tech-badge">Analytics</div>
+                            </div>
+                            <p>Complete suite of tools for scientific data analysis, processing and export</p>
+                            <ul class="tech-features">
+                                <li>Real-time processing</li>
+                                <li>Multi-format export</li>
+                                <li>Scientific validation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How to Use Section -->
+        <section id="how-to-use" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Analysis Interface</h2>
+                    <div class="section-divider"></div>
+                </div>
+                <div class="section-content">
+                    <div class="analysis-intro">
+                        <p class="lead-paragraph">Use the interface below to analyze your scientific parameters and generate detailed reports.</p>
+                    </div>
+                    
+                    <div class="analysis-panel">
+                        <div class="panel-header">
+                            <h3>Input Parameters</h3>
+                            <p>Please enter the values for analysis</p>
+                        </div>
+                        
+                        <div class="parameter-form">
+                            <div class="input-grid">
+                                <div class="form-group">
+                                    <label for="thicknessSpring">Spring Thickness (mm)</label>
+                                    <div class="input-wrapper">
+                                        <input type="number" id="thicknessSpring" step="0.01" placeholder="0.00" />
+                                        <span class="input-unit">mm</span>
+                                    </div>
+                                    <small class="input-help">Spring thickness value in millimeters</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="strapWidth">Strap Width (mm)</label>
+                                    <div class="input-wrapper">
+                                        <input type="number" id="strapWidth" step="0.01" placeholder="0.00" />
+                                        <span class="input-unit">mm</span>
+                                    </div>
+                                    <small class="input-help">Strap width value in millimeters</small>
+                                </div>
+                            </div>
+                            
+                            <div class="action-panel">
+                                <button onclick="processData()" class="btn btn-primary">
+                                    Analyze Data
+                                </button>
+                                <button onclick="generateFile()" class="btn btn-secondary">
+                                    Generate Report
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="results" class="results-container" style="display: none;">
+                            <div class="results-header">
+                                <h3>Analysis Results</h3>
+                                <div class="results-status">
+                                    <span class="status-indicator success"></span>
+                                    <span>Analysis completed</span>
+                                </div>
+                            </div>
+                            <div id="results-content" class="results-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Auteurs Section -->
+        <section id="auteurs" class="content-section alt-bg">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Research Team</h2>
+                    <div class="section-divider"></div>
+                </div>
+                <div class="section-content">
+                    <div class="team-intro">
+                        <p class="lead-paragraph">Our multidisciplinary team combines technical expertise and scientific rigor to develop innovative solutions.</p>
+                    </div>
+                    
+                    <div class="team-grid">
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <span class="avatar-placeholder">👨‍💻</span>
+                            </div>
+                            <div class="member-info">
+                                <h3>Development Team</h3>
+                                <p class="member-role">Developers & Engineers</p>
+                                <p class="member-bio">Specialists in scientific data processing, modern user interface development and algorithm optimization.</p>
+                                <div class="member-skills">
+                                    <span class="skill-tag">Python</span>
+                                    <span class="skill-tag">FastAPI</span>
+                                    <span class="skill-tag">Data Science</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <span class="avatar-placeholder">👩‍🔬</span>
+                            </div>
+                            <div class="member-info">
+                                <h3>Associate Researchers</h3>
+                                <p class="member-role">Scientific Community</p>
+                                <p class="member-bio">International network of researchers and scientists contributing to continuous improvement of analysis methods.</p>
+                                <div class="member-skills">
+                                    <span class="skill-tag">Research</span>
+                                    <span class="skill-tag">Analysis</span>
+                                    <span class="skill-tag">Innovation</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Publications Section -->
+        <section id="publications" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Publications & References</h2>
+                    <div class="section-divider"></div>
+                </div>
+                <div class="section-content">
+                    <div class="publications-intro">
+                        <p class="lead-paragraph">Our work has been published in recognized scientific journals and presented at international conferences.</p>
+                    </div>
+                    
+                    <div class="publications-list">
+                        <article class="publication-item">
+                            <div class="publication-meta">
+                                <span class="publication-year">2024</span>
+                                <span class="publication-type">Journal Article</span>
+                            </div>
+                            <div class="publication-content">
+                                <h3 class="publication-title">Haptistrap: A Modern Approach to Scientific Data Processing</h3>
+                                <p class="publication-authors">Haptistrap Team, International Collaborators</p>
+                                <p class="publication-journal"><em>Journal of Web Technology & Computational Sciences</em>, Vol. 15, No. 3</p>
+                                <p class="publication-abstract">This study presents a new methodology for efficient processing of complex physical parameters, with particular attention to width-force interactions...</p>
+                                <div class="publication-tags">
+                                    <span class="tag">Data Processing</span>
+                                    <span class="tag">Web Technologies</span>
+                                    <span class="tag">Scientific Computing</span>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="publication-item">
+                            <div class="publication-meta">
+                                <span class="publication-year">2024</span>
+                                <span class="publication-type">Conference</span>
+                            </div>
+                            <div class="publication-content">
+                                <h3 class="publication-title">Parameter Optimization with FastAPI: Modern Approaches</h3>
+                                <p class="publication-authors">Haptistrap Technical Team</p>
+                                <p class="publication-journal"><em>International Conference on APIs and Microservices</em>, Paris 2024</p>
+                                <p class="publication-abstract">Presentation of advanced optimization techniques for scientific APIs, with case study on the Haptistrap interface...</p>
+                                <div class="publication-tags">
+                                    <span class="tag">API Design</span>
+                                    <span class="tag">Performance</span>
+                                    <span class="tag">Optimization</span>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Haptistrap</h3>
+                    <p>Modern scientific interface for complex data analysis</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a href="#problematiques">Documentation</a></li>
+                        <li><a href="#how-to-use">API</a></li>
+                        <li><a href="#publications">Publications</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>For any scientific or technical questions</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Haptistrap. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
