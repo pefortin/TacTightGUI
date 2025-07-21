@@ -258,7 +258,7 @@ async function processData(event) {
         
         // Update download button text with file info
         const fileSizeKB = Math.round(stlBlobData.size / 1024);
-        downloadButton.innerHTML = `Download STL (${fileSizeKB} KB)`;
+        downloadButton.innerHTML = `Download STL`;
         
         showNotification(`STL file "${stlFilename}" generated successfully! Click Download to save it.`, 'success');
         
@@ -281,19 +281,56 @@ async function processData(event) {
 }
 
 
-// New download function
-function downloadFile() {
+
+// New download function - Updated to create ZIP with fixed name
+async function downloadFile() {
     if (!stlBlobData || !stlFilename) {
         showNotification('No file available for download', 'error');
         return;
     }
     
     try {
-        // Create and trigger download
-        const url = window.URL.createObjectURL(stlBlobData);
+        // Import JSZip dynamically (we'll need to add this library)
+        if (typeof JSZip === 'undefined') {
+            showNotification('ZIP library not loaded. Please refresh the page and try again.', 'error');
+            return;
+        }
+        
+        const zip = new JSZip();
+        
+        // Add the generated STL file
+        zip.file(stlFilename, stlBlobData);
+        
+        // Add the two files from tactight_files folder
+        try {
+            // Fetch the first STL file
+            const enclosureBottomResponse = await fetch('tactight_files/TacTight_enclosureBottom.stl');
+            if (enclosureBottomResponse.ok) {
+                const enclosureBottomBlob = await enclosureBottomResponse.blob();
+                zip.file('TacTight_enclosureBottom.stl', enclosureBottomBlob);
+            }
+            
+            // Fetch the second STL file
+            const enclosureTopResponse = await fetch('tactight_files/TacTight_enclosureTop.stl');
+            if (enclosureTopResponse.ok) {
+                const enclosureTopBlob = await enclosureTopResponse.blob();
+                zip.file('TacTight_enclosureTop.stl', enclosureTopBlob);
+            }
+        } catch (fetchError) {
+            console.warn('Could not fetch additional files:', fetchError);
+            showNotification('Warning: Some additional files could not be included in the ZIP', 'warning');
+        }
+        
+        // Generate the ZIP file
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        
+        // Create download link
+        const url = window.URL.createObjectURL(zipBlob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = stlFilename;
+        
+        // Set fixed ZIP filename
+        a.download = 'tactight_files.zip';
         a.style.display = 'none';
         
         document.body.appendChild(a);
@@ -305,13 +342,15 @@ function downloadFile() {
             window.URL.revokeObjectURL(url);
         }, 100);
         
-        showNotification(`File "${stlFilename}" downloaded successfully!`, 'success');
+        showNotification('ZIP file "tactight_files.zip" downloaded successfully!', 'success');
         
     } catch (error) {
         console.error('❌ Download error:', error);
         showNotification('Download error: ' + error.message, 'error');
     }
 }
+
+
 
 // Add notification system
 function showNotification(message, type = 'info') {

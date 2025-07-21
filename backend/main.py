@@ -14,7 +14,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import smtplib
 import os
-from datetime import datetime
 import logging
 from dotenv import load_dotenv
 
