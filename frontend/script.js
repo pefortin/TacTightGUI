@@ -435,6 +435,7 @@ function clearFieldError(event) {
     }
 }
 
+
 async function handleContactFormSubmit(event) {
     event.preventDefault();
     
@@ -472,24 +473,30 @@ async function handleContactFormSubmit(event) {
     submitButton.disabled = true;
     
     try {
-        // Simulate API call (you'll need to implement the actual backend endpoint)
-        const response = await fetch(`${API_BASE_URL}/contact`, {
+        console.log('🔄 Sending contact form...', contactData);
+        
+        // Call the backend contact endpoint with the correct data structure
+        const response = await fetch(`${API_BASE_URL}contact`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                to: 'p5fortin@uqac.ca',
-                from: contactData.email,
+                to: 'kassoum.sanogo1@uqac.ca',
+                from: contactData.email,  // This will be mapped to from_email by the backend alias
                 name: contactData.name,
-                subject: `TacTight Contact: ${contactData.subject}`,
-                message: `From: ${contactData.name} (${contactData.email})\n\nSubject: ${contactData.subject}\n\nMessage:\n${contactData.message}`,
-                originalData: contactData
+                subject: contactData.subject,
+                message: contactData.message,
+                originalData: contactData  // Include original data as expected by backend
             })
         });
         
+        console.log('📊 Contact form response status:', response.status);
+        
+        // Handle response
         if (response.ok) {
-            showNotification('Message sent successfully! We will get back to you soon.', 'success');
+            const result = await response.json();
+            showNotification(result.message || 'Message sent successfully! We will get back to you soon.', 'success');
             form.reset();
             
             // Remove validation classes
@@ -506,16 +513,63 @@ async function handleContactFormSubmit(event) {
             }, 3000);
             
         } else {
-            throw new Error('Failed to send message');
+            // Handle API errors
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch (jsonError) {
+                errorData = { 
+                    detail: response.status === 404 ? 'Contact endpoint not found' : 'Unknown error occurred' 
+                };
+            }
+            throw new Error(errorData.detail || errorData.message || `HTTP ${response.status}: Failed to send message`);
         }
         
     } catch (error) {
-        console.error('Contact form error:', error);
-        showNotification('Failed to send message. Please try again or contact us directly at p5fortin@uqac.ca', 'error');
+        console.error('❌ Contact form error:', error);
         
+        let errorMessage = 'Failed to send message. Please try again or contact us directly at p5fortin@uqac.ca';
+        
+        // Handle specific error types
+        if (error.message.includes('fetch') || error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+            errorMessage = 'Network error. Please check your connection and try again.';
+        } else if (error.message.includes('not found') || error.message.includes('404')) {
+            errorMessage = 'Contact service temporarily unavailable. Please contact us directly at p5fortin@uqac.ca';
+        } else if (error.message.includes('timeout')) {
+            errorMessage = 'Request timeout. Please try again.';
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+        
+        showNotification(errorMessage, 'error');
+        
+        // IMPORTANT: Always reset button state in catch block
         submitButton.innerHTML = originalButtonText;
         submitButton.disabled = false;
     }
+}
+
+// Navigation functionality
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Add click handlers for progress thread steps
+function initProgressThreadNavigation() {
+    const threadSteps = document.querySelectorAll('.thread-step');
+    
+    threadSteps.forEach(step => {
+        step.style.cursor = 'pointer';
+        step.addEventListener('click', function() {
+            const sectionId = this.dataset.section;
+            if (sectionId) {
+                scrollToSection(sectionId);
+            }
+        });
+    });
 }
 
 // Update the existing event listeners
@@ -529,6 +583,8 @@ window.addEventListener('resize', updateProgressThread);
 // Initialize contact form when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initContactForm();
+    initProgressThreadNavigation(); // Add this line
+
     // Force scroll to top on page load/refresh
     setTimeout(() => {
         window.scrollTo(0, 0);

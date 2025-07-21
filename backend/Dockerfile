@@ -11,6 +11,8 @@ WORKDIR /backend
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY .env /app/.env
+
 # Copy app code and assets
 COPY main.py .
 COPY TacTight.scad .

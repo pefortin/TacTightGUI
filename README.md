@@ -49,7 +49,7 @@ hapstitrap/
 cd backend
 
 # Launch with Docker Compose
-docker-compose up
+docker-compose up --build
 
 # The API will be available at http://localhost:8000
 
