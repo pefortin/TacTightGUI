@@ -529,5 +529,21 @@ window.addEventListener('resize', updateProgressThread);
 // Initialize contact form when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initContactForm();
+    // Force scroll to top on page load/refresh
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+    }, 10);
+    
+    // Ensure we're at the top immediately
+    if (window.history.scrollRestoration) {
+        window.history.scrollRestoration = 'manual';
+    }
 });
 
+// Also handle page show event (back/forward navigation)
+window.addEventListener('pageshow', function(event) {
+    // Force scroll to top when page is shown (including from cache)
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+    }, 10);
+});
