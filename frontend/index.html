@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haptistrap - Scientific Data Processing Interface</title>
+    <title>TacTight - Scientific Data Processing Interface</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,14 +14,48 @@
     <section class="hero-section">
         <div class="hero-content">
             <div class="hero-text">
-                <h1 class="hero-title">Haptistrap</h1>
-                <p class="hero-subtitle">Scientific Data Processing Interface</p>
-                <p class="hero-description">Advanced analysis of width and force parameters with automatic report generation</p>
-                <button onclick="scrollToSection('how-to-use')" class="hero-cta">Start Analysis</button>
+                <h1 class="hero-title">TacTight</h1>
+                <p class="hero-subtitle">A Simple 3D-Printed Mechanical System for Reliable Skin-Device Coupling in Wearable Sensors</p>
+                <p class="hero-description">Reliable skin-device coupling remains a challenge in research involving wearable systems that require consistent mechanical contact with the skin. 
+                    Currently, researchers often rely on their own subjective perception of how tight a device feels when attaching it to participants, introducing variability and limiting the repeatability of their results.
+                    TacTight is a simple, compact, fully 3D-printed system designed to standardize the contact force between wearable devices and the skin using a straightforward visual indicator.
+                    No sensors. No cables. No electronics.
+                    All you need is access to a 3D printer!
+                </p>
+                <button onclick="scrollToSection('how-to-use')" class="hero-cta">Start Process</button>
             </div>
         </div>
         <div class="hero-background">
             <div class="geometric-pattern"></div>
+        </div>
+    </section>
+
+    <!-- Logo Carousel Section -->
+    <section class="logo-carousel-section">
+        <div class="container">
+            <div class="logo-carousel">
+                <div class="logo-track">
+                    <div class="logo-item">
+                        <img src="images/logo/uqac.png" alt="Logo 1">
+                    </div>
+                    <div class="logo-item">
+                        <img src="images/logo/mitacs.png" alt="Logo 2">
+                    </div>
+                    <div class="logo-item">
+                        <img src="images/logo/crsng.png" alt="Logo 3">
+                    </div>
+                    <!-- Duplicate for seamless loop -->
+                    <div class="logo-item">
+                        <img src="images/logo/uqac.png" alt="Logo 1">
+                    </div>
+                    <div class="logo-item">
+                        <img src="images/logo/mitacs.png" alt="Logo 2">
+                    </div>
+                    <div class="logo-item">
+                        <img src="images/logo/crsng.png" alt="Logo 3">
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -88,85 +122,169 @@
                 </div>
                 <div class="section-content">
                     <div class="intro-text">
-                        <p class="lead-paragraph">This research addresses fundamental Problematic in processing and analyzing complex physical parameters, particularly interactions between width and force in dynamic systems.</p>
-                    </div>
-                    
-                    <div class="research-grid">
-                        <div class="research-card">
-                            <div class="card-icon">⚡</div>
-                            <h3>Efficient Processing</h3>
-                            <p>Development of optimized algorithms for real-time processing of width and force parameters</p>
+                        <p class="lead-paragraph">
+                            As researchers experienced with physiological sensors and haptic stimulation devices, we often found ourselves frustrated by the lack of standardized methods for attaching actuators or sensors to a participant's body. Manufacturer instructions offered little clarity, suggesting only vague guidelines such as <em>"not too tight, not too loose,"</em> <em>"as tight as is comfortable,"</em> or <em>"a snug fit."</em>
+                        </p>
+                        
+                        <div class="problem-highlight">
+                            <div class="highlight-icon">⚠️</div>
+                            <div class="highlight-content">
+                                <h3>The Challenge</h3>
+                                <p>These ambiguous instructions, compounded by each user's interpretation, create a situation where there is very little repeatability in how devices are worn, even when the same person installs the device. The issue becomes even more pronounced when multiple people, such as several research assistants, are responsible for installing the systems during data collection.</p>
+                            </div>
                         </div>
-                        <div class="research-card">
-                            <div class="card-icon">📈</div>
-                            <h3>Data Precision</h3>
-                            <p>Generation of precise data based on advanced mathematical models and statistical calculations</p>
+
+                        <div class="solution-journey">
+                            <div class="journey-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Problem Identification</h4>
+                                    <p>We explored our options, but apart from integrating load cells into every system we tested, we couldn't find a satisfactory method to make this process more objective.</p>
+                                </div>
+                            </div>
+
+                            <div class="journey-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Complexity Challenge</h4>
+                                    <p>However, adding sensors, electronics, and cabling would have been a much more complex endeavor—not very practical or appealing unless absolutely crucial for data collection.</p>
+                                </div>
+                            </div>
+
+                            <div class="journey-step highlighted">
+                                <div class="step-number">💡</div>
+                                <div class="step-content">
+                                    <h4>The Solution: KISS Principle</h4>
+                                    <p>With the principle of <strong>"KISS—Keep It Simple, Stupid"</strong> in mind, TacTight (formerly HaptiStrap) was born.</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="research-card">
-                            <div class="card-icon">🎨</div>
-                            <h3>Intuitive Interface</h3>
-                            <p>Design of a modern and accessible user interface for researchers and scientists</p>
+
+                        <div class="tactight-description">
+                            <div class="description-card">
+                                <div class="card-header">
+                                    <h3>🔬 What is TacTight?</h3>
+                                </div>
+                                <div class="card-content">
+                                    <p>TacTight is a simple, fully 3D-printed system that you add in series with the bracelet, band, or strap used to apply a sensor or actuator to the user's body. When tightening the band, you simply align the visual indicators on its side, letting you know you are at approximately the intended force.</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="research-card">
-                            <div class="card-icon">💾</div>
-                            <h3>Advanced Export</h3>
-                            <p>Flexible export system with support for multiple standardized scientific formats</p>
+
+                        <div class="comparison-section">
+                            <div class="comparison-header">
+                                <h3>Honest Performance Assessment</h3>
+                            </div>
+                            <div class="comparison-grid">
+                                <div class="comparison-item negative">
+                                    <div class="comparison-icon">📊</div>
+                                    <h4>vs. Load Cell</h4>
+                                    <p>Is it as accurate as a load cell? <strong>No.</strong></p>
+                                </div>
+                                <div class="comparison-item negative">
+                                    <div class="comparison-icon">🔧</div>
+                                    <h4>vs. Precision Spring</h4>
+                                    <p>Is it as repeatable as a high-precision metal spring? <strong>Also no.</strong></p>
+                                </div>
+                                <div class="comparison-item positive">
+                                    <div class="comparison-icon">🚀</div>
+                                    <h4>BUT Here's the Magic</h4>
+                                    <p>TacTight can be <strong>3D printed in less than 30 minutes</strong> using a few cents of PLA, and our evaluations show it <em>significantly improves</em> both the repeatability and accuracy of contact force beneath the bracelet, compared to relying solely on subjective perception of tightness.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Informations Générales Section -->
+                <!-- Informations Générales Section -->
         <section id="info-generale" class="content-section alt-bg">
             <div class="container">
                 <div class="section-header">
-                    <h2>Architecture & Methodology</h2>
+                    <h2>How Does It Work</h2>
                     <div class="section-divider"></div>
                 </div>
                 <div class="section-content">
-                    <div class="methodology-intro">
-                        <p class="lead-paragraph">Haptistrap represents an innovative approach combining modern web technologies with the rigorous requirements of scientific research.</p>
-                    </div>
                     
-                    <div class="tech-stack">
-                        <div class="tech-card">
-                            <div class="tech-header">
-                                <h3>Scientific Backend</h3>
-                                <div class="tech-badge">Python</div>
+                    <div class="steps-process">
+                        <div class="process-timeline">
+                            <div class="timeline-line"></div>
+                            
+                            <div class="process-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Generate Your Device</h4>
+                                    <p>Use the <a href="#how-to-use" onclick="scrollToSection('how-to-use')" class="inline-link">online generator</a> to create a TacTight that closely matches your required contact force and strap width.</p>
+                                </div>
                             </div>
-                            <p>FastAPI with scientific computing algorithms, data validation and CORS support for cross-platform integration</p>
-                            <ul class="tech-features">
-                                <li>Real-time calculations</li>
-                                <li>Parameter validation</li>
-                                <li>Documented RESTful API</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="tech-card">
-                            <div class="tech-header">
-                                <h3>Modern Interface</h3>
-                                <div class="tech-badge">JavaScript</div>
+
+                            <div class="process-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>3D Print the Device</h4>
+                                    <p>3D print the device using the recommended settings.</p>
+                                    <div class="settings-note">
+                                        <em>(A centered table with two columns and a few rows will be included here—content to be finalized by Karim.)</em>
+                                    </div>
+                                </div>
                             </div>
-                            <p>Responsive frontend with vanilla JavaScript, optimized for complex scientific data visualization</p>
-                            <ul class="tech-features">
-                                <li>Adaptive interface</li>
-                                <li>Interactive visualizations</li>
-                                <li>Intuitive navigation</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="tech-card">
-                            <div class="tech-header">
-                                <h3>Advanced Features</h3>
-                                <div class="tech-badge">Analytics</div>
+
+                            <div class="process-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Assemble TacTight</h4>
+                                    <p>Assemble TacTight components following the included assembly guide.</p>
+                                </div>
                             </div>
-                            <p>Complete suite of tools for scientific data analysis, processing and export</p>
-                            <ul class="tech-features">
-                                <li>Real-time processing</li>
-                                <li>Multi-format export</li>
-                                <li>Scientific validation</li>
-                            </ul>
+
+                            <div class="process-step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Attach to Your System</h4>
+                                    <p>Attach TacTight in series with your bracelet, band, or strap.</p>
+                                </div>
+                            </div>
+
+                            <div class="process-step">
+                                <div class="step-number">5</div>
+                                <div class="step-content">
+                                    <h4>Position on User</h4>
+                                    <p>Place the system on the user's body, without tightening it yet.</p>
+                                </div>
+                            </div>
+
+                            <div class="process-step highlight-step">
+                                <div class="step-number">6</div>
+                                <div class="step-content">
+                                    <h4>Align Visual Indicators</h4>
+                                    <p>Tighten the band until the pins on the outer part align with the ring on the main body. When the pins align with the indented circle, the force under TacTight is approximately the value for which it was designed.</p>
+                                </div>
+                            </div>
+
+                            <div class="process-step">
+                                <div class="step-number">7</div>
+                                <div class="step-content">
+                                    <h4>Secure & Verify</h4>
+                                    <p>Secure the system and ensure everything remains properly aligned. Repeat the tightening process as needed until the pins and ring are aligned when the system is at rest.</p>
+                                </div>
+                            </div>
+
+                            <div class="process-step">
+                                <div class="step-number">8</div>
+                                <div class="step-content">
+                                    <h4>Collect Data</h4>
+                                    <p>Collect your data with confidence in consistent device-skin coupling.</p>
+                                </div>
+                            </div>
+
+                            <div class="process-step citation-step">
+                                <div class="step-number">9</div>
+                                <div class="step-content">
+                                    <h4>Cite TacTight</h4>
+                                    <p>Please cite TacTight if you use it in your research!</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
