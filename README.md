@@ -2,6 +2,21 @@
 
 A modern web application combining FastAPI and JavaScript for parameter processing (width and force) with STL file generation.
 
+## About TacTight
+
+TacTight is a simple, compact, fully 3D-printed mechanical system designed to standardize the contact force between wearable devices and the skin. Born from the frustration of inconsistent device attachment methods in research settings, TacTight provides an objective solution to replace subjective perceptions of "tight enough" with a reliable visual indicator system.
+
+This research project is funded by **UQAC (Université du Québec à Chicoutimi)**, **Mitacs**, and **NSERC (Natural Sciences and Engineering Research Council of Canada)**.
+
+**Key Features:**
+- **No electronics required** - Purely mechanical system
+- **Quick to produce** - 3D printable in under 30 minutes
+- **Cost-effective** - Uses only a few cents worth of PLA material
+- **Standardized coupling** - Ensures consistent skin-device contact force
+- **Research-grade reliability** - Significantly improves repeatability compared to subjective methods
+
+The system works by integrating with existing straps or bands and using visual alignment indicators to achieve approximately the intended contact force, making it ideal for researchers working with wearable sensors, haptic devices, and physiological monitoring equipment.
+
 ## Project Structure
 
 ```
