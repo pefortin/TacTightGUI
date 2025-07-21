@@ -1,255 +1,137 @@
-# TacTight - Interface de Traitement de Données
+# TacTight - Data Processing Interface
 
-Une application web moderne combinant FastAPI et JavaScript pour le traitement de paramètres (largeur et force) avec génération de fichiers STL.
+A modern web application combining FastAPI and JavaScript for parameter processing (width and force) with STL file generation.
 
-## Structure du Projet
+## Project Structure
 
 ```
 hapstitrap/
 ├── backend/
-│   ├── main.py              # API FastAPI
-│   ├── requirements.txt     # Dépendances Python backend
-│   ├── Dockerfile          # Configuration Docker backend
-│   └── docker-compose.yml  # Orchestration Docker
+│   ├── main.py              # FastAPI API
+│   ├── requirements.txt     # Python backend dependencies
+│   ├── Dockerfile          # Backend Docker configuration
+│   └── docker-compose.yml  # Docker orchestration
 ├── frontend/
-│   ├── index.html          # Interface principale
-│   ├── styles.css          # Styles CSS
-│   ├── script.js           # Logique JavaScript
-│   └── server.js           # Serveur Node.js avec proxy
+│   ├── index.html          # Main interface
+│   ├── styles.css          # CSS styles
+│   ├── script.js           # JavaScript logic
+│   └── server.js           # Node.js server with proxy
 └── README.md               # Documentation
 ```
 
-## Prérequis
+## Prerequisites
 
-- Python 3.8+ pour le backend
-- Node.js 14+ pour le frontend (optionnel)
-- Docker et Docker Compose (optionnel, recommandé)
+- Python 3.8+ for backend
+- Node.js 14+ for frontend (optional)
+- Docker and Docker Compose (optional, recommended)
 
-## Installation et Lancement
+## Installation and Launch
 
-### Option 1: Lancement avec Docker (Recommandé)
+### Option 1: Launch with Docker (Recommended)
 
 ```bash
-# Depuis le répertoire backend
+# From the backend directory
 cd backend
 
-# Lancer avec Docker Compose
+# Launch with Docker Compose
 docker-compose up --build
 
-# L'API sera disponible sur http://localhost:8000
+# The API will be available at http://localhost:8000
+
+# Stop Docker Compose
+docker-compose down
 ```
 
-### Option 2: Lancement Manuel
+**The backend will be available at: `http://localhost:8000`**
+**API Documentation: `http://localhost:8000/docs`**
 
-#### 1. Lancer le Backend
+#### 2. Launch the Frontend
 
-```bash
-# Depuis le répertoire racine du projet
-cd backend
-
-# Créer un environnement virtuel
-python -m venv venv
-
-# Activer l'environnement virtuel
-# Sur macOS/Linux:
-source venv/bin/activate
-# Sur Windows:
-venv\Scripts\activate
-
-# Installer les dépendances
-pip install -r requirements.txt
-
-# Lancer le serveur FastAPI
-python main.py
-# Ou avec uvicorn directement:
-# uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-**Le backend sera disponible sur : `http://localhost:8000`**
-**Documentation API : `http://localhost:8000/docs`**
-
-#### 2. Lancer le Frontend
-
-**Option A: Avec le serveur Node.js intégré (Recommandé)**
+**Option A: With integrated Node.js server (Recommended)**
 
 ```bash
-# Depuis le répertoire frontend
+# From the frontend directory
 cd frontend
 
-# Installer les dépendances Node.js
+# Install Node.js dependencies
 npm install
 
-# Lancer le serveur avec proxy intégré
+# Launch server with integrated proxy
 npm start
-# ou
+# or
 node server.js
 ```
 
-**Option B: Serveur HTTP simple**
+**The frontend will be available at: `http://localhost:3000`**
 
-```bash
-# Depuis le répertoire frontend
-cd frontend
+## URL Configuration
 
-# Avec Python
-python -m http.server 3000
-
-# Avec Node.js (si installé)
-npx http-server . -p 3000 --cors
-
-# Avec PHP (si installé)
-php -S localhost:3000
-```
-
-**Le frontend sera disponible sur : `http://localhost:3000`**
-
-## Configuration des URLs
-
-### Développement Local
+### Local Development
 
 - Backend API: `http://localhost:8000`
 - Frontend: `http://localhost:3000`
-- Le frontend utilise un proxy vers `/api/` qui redirige vers le backend
+- The frontend uses a proxy to `/api/` which redirects to the backend
 
-### Variables d'Environnement
+## Features
 
-```bash
-# Backend
-PORT=8000
-API_URL=http://127.0.0.1:8000
+### User Interface
 
-# Frontend (pour server.js)
-PORT=3000
-API_URL=http://127.0.0.1:8000
-```
+1. **Hero Section** - TacTight project presentation
+2. **Problems** - Scientific challenges
+3. **Architecture** - How it works
+4. **Interface** - Interactive STL generator
+5. **Team** - Information about the authors
+6. **Contact** - Contact form
 
-## Fonctionnalités
+## Usage
 
-### Interface Utilisateur
+1. **Launch services** (backend + frontend)
+2. **Open browser** at `http://localhost:3000`
+3. **Navigate** to the "Make your Own TacTight" section
+4. **Enter parameters**:
+   - Desired force (4.92 - 10.40 N)
+   - Strap width (≥ 26 mm)
+5. **Generate** the custom STL file
+6. **Download** the generated file
 
-1. **Hero Section** - Présentation du projet TacTight
-2. **Problématiques** - Défis scientifiques
-3. **Architecture** - Comment ça fonctionne
-4. **Interface** - Générateur STL interactif
-5. **Équipe** - Informations sur les auteurs
-6. **Contact** - Formulaire de contact
+## Development
 
-### API Endpoints
-
-```bash
-GET  /                     # Status de l'API
-GET  /generate-stl/        # Génération de fichier STL
-POST /contact             # Envoi de message de contact
-```
-
-## Utilisation
-
-1. **Lancer les services** (backend + frontend)
-2. **Ouvrir le navigateur** sur `http://localhost:3000`
-3. **Naviguer** vers la section "Make your Own TacTight"
-4. **Saisir les paramètres** :
-   - Force désirée (4.92 - 10.40 N)
-   - Largeur de sangle (≥ 26 mm)
-5. **Générer** le fichier STL personnalisé
-6. **Télécharger** le fichier généré
-
-## Développement
-
-### Structure des Fichiers
+### File Structure
 
 ```bash
-# Backend - Ajouter de nouveaux endpoints
+# Backend - Add new endpoints
 backend/main.py
 
-# Frontend - Interface utilisateur
-frontend/index.html      # Structure HTML
-frontend/styles.css      # Styles et design
-frontend/script.js       # Logique et interactions
+# Frontend - User interface
+frontend/index.html      # HTML structure
+frontend/styles.css      # Styles and design
+frontend/script.js       # Logic and interactions
 
 # Configuration
-backend/docker-compose.yml  # Services Docker
-frontend/server.js          # Serveur avec proxy
+backend/docker-compose.yml  # Docker services
+frontend/server.js          # Server with proxy
 ```
 
-### Mode Développement
+### Development Mode
 
 ```bash
-# Backend avec rechargement automatique
+# Backend with auto-reload
 cd backend
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
-# Frontend avec rechargement automatique
+# Frontend with auto-reload
 cd frontend
-# Utiliser un serveur avec live-reload comme:
+# Use a server with live-reload like:
 npx live-server --port=3000 --proxy=/api:http://localhost:8000
 ```
 
-## Dépannage
-
-### Problèmes Courants
-
-**1. Erreur CORS**
-```bash
-# Vérifier que le backend est lancé sur le bon port
-# Le frontend doit pointer vers http://localhost:8000
-```
-
-**2. Port déjà utilisé**
-```bash
-# Changer le port dans la configuration
-export PORT=8001  # Pour le backend
-export PORT=3001  # Pour le frontend
-```
-
-**3. Problèmes de proxy**
-```bash
-# Vérifier la configuration dans frontend/server.js
-# S'assurer que API_URL pointe vers le bon backend
-```
-
-**4. Dépendances manquantes**
-```bash
-# Backend
-cd backend && pip install -r requirements.txt
-
-# Frontend (si utilisation de Node.js)
-cd frontend && npm install
-```
-
-### Logs de Debug
-
-```bash
-# Backend - logs détaillés
-cd backend
-uvicorn main:app --reload --log-level debug
-
-# Frontend - logs du serveur
-cd frontend
-DEBUG=* node server.js
-```
-
-## Technologies Utilisées
+## Technologies Used
 
 - **Backend**: FastAPI, Python, Uvicorn, SlowAPI (rate limiting)
-- **Frontend**: HTML5, CSS3, JavaScript (Vanilla), Node.js (serveur)
+- **Frontend**: HTML5, CSS3, JavaScript (Vanilla), Node.js (server)
 - **Containerization**: Docker, Docker Compose
-- **API**: RESTful avec support CORS complet
-- **Proxy**: HTTP proxy middleware pour développement
+- **API**: RESTful with full CORS support
+- **Proxy**: HTTP proxy middleware for development
 
-## Production
 
-Pour déployer en production :
 
-1. **Construire l'image Docker** : `docker-compose build`
-2. **Configurer les variables d'environnement** appropriées
-3. **Utiliser un reverse proxy** (Nginx, Traefik)
-4. **Configurer HTTPS** et la sécurité
-5. **Monitorer les logs** et performances
-
-## Contribution
-
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/nouvelle-fonctionnalite`)
-3. Commit les changements (`git commit -am 'Ajouter nouvelle fonctionnalité'`)
-4. Push sur la branche (`git push origin feature/nouvelle-fonctionnalite`)
-5. Créer une Pull Request
