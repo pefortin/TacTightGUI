@@ -133,5 +133,9 @@ npx live-server --port=3000 --proxy=/api:http://localhost:8000
 - **API**: RESTful with full CORS support
 - **Proxy**: HTTP proxy middleware for development
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 
 
