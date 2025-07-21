@@ -3,13 +3,6 @@ venv/
 env/
 .venv/
 
-# Backend files
-backend/
-
-# Dependencies and build files
-requirements.txt
-README.md
-
 # Python cache
 __pycache__/
 *.pyc

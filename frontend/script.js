@@ -1,8 +1,15 @@
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'api/';
 
 // Force and thickness data for interpolation
 const forces_4mm = [4.92, 6.18, 7.61, 9.42, 10.40];
 const epaisseurs = [3.0, 3.5, 4.0, 4.5, 5.0];
+
+// Global variable for scroll throttling
+let scrollTimeout;
+
+// Global variable to store STL data
+let stlBlobData = null;
+let stlFilename = null;
 
 // Linear interpolation function
 function linearInterpolation(x, x0, x1, y0, y1) {
@@ -147,13 +154,6 @@ function updateNavbarBackground() {
     }
 }
 
-// Event listeners
-window.addEventListener('scroll', function() {
-    updateActiveSection();
-    updateNavbarBackground();
-}, { passive: true });
-window.addEventListener('resize', updateProgressThread);
-
 // Navigation mobile
 function toggleMobileNav() {
     const navLinks = document.querySelector('.nav-links');
@@ -163,8 +163,13 @@ function toggleMobileNav() {
     navToggle.classList.toggle('active');
 }
 
-// Process data function - Updated to calculate thickness from force
-async function processData() {
+
+// Process data function - Updated with simple spinner and visible download button
+async function processData(event) {
+    if (!event) {
+        event = window.event;
+    }
+    
     const forceInput = document.getElementById('forceInput').value;
     const strapWidth = document.getElementById('strapWidth').value;
     
@@ -173,543 +178,196 @@ async function processData() {
         return;
     }
     
-    // Animation de chargement
-    const button = event.target;
-    const originalText = button.innerHTML;
-    button.innerHTML = '<span class="btn-icon">⏳</span> Analyzing...';
-    button.disabled = true;
+    // Get buttons
+    const generateButton = event?.target || document.querySelector('.btn-primary');
+    const downloadButton = document.querySelector('.download-btn');
+    
+    // Show spinner on generate button
+    const originalText = generateButton.innerHTML;
+    generateButton.innerHTML = '<span class="spinner"></span> Generating...';
+    generateButton.disabled = true;
+    
+    // Hide download button while processing
+    downloadButton.style.display = 'none';
     
     try {
         // Calculate thickness from force
         const force = parseFloat(forceInput);
         const calculatedThickness = estimerEpaisseur(force);
         
-        // Update the thickness display
-        document.getElementById('calculatedThickness').value = calculatedThickness;
+        // Remove this line - no longer updating thickness display
+        // document.getElementById('calculatedThickness').value = calculatedThickness;
         
-        const response = await fetch(`${API_BASE_URL}/process`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                thicknessSpring: calculatedThickness,
-                strapWidth: parseFloat(strapWidth)
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error('Erreur lors du traitement des données');
+        // Validate inputs
+        if (calculatedThickness < 3 || calculatedThickness > 5) {
+            throw new Error('Calculated thickness must be between 3 and 5 mm');
         }
         
-        const result = await response.json();
-        displayResults(result, force, calculatedThickness);
-        showNotification('Analysis completed successfully!', 'success');
-        
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification('Processing error: ' + error.message, 'error');
-    } finally {
-        button.innerHTML = originalText;
-        button.disabled = false;
-    }
-}
-
-// Generate file function - Updated to use calculated thickness
-async function generateFile() {
-    const forceInput = document.getElementById('forceInput').value;
-    const strapWidth = document.getElementById('strapWidth').value;
-    
-    if (!forceInput || !strapWidth) {
-        showNotification('Please fill in all fields', 'warning');
-        return;
-    }
-    
-    // Animation de chargement
-    const button = event.target;
-    const originalText = button.innerHTML;
-    button.innerHTML = '<span class="btn-icon">📁</span> Generating...';
-    button.disabled = true;
-    
-    try {
-        // Calculate thickness from force
-        const force = parseFloat(forceInput);
-        const calculatedThickness = estimerEpaisseur(force);
-        
-        const response = await fetch(`${API_BASE_URL}/generate-file`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                thicknessSpring: calculatedThickness,
-                strapWidth: parseFloat(strapWidth)
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error('Erreur lors de la génération du fichier');
+        if (parseFloat(strapWidth) < 26) {
+            throw new Error('Strap width must be at least 26 mm');
         }
         
-        // Create download link
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `haptistrap_results_f${force}_t${calculatedThickness}_w${strapWidth}.csv`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
+        console.log(`Requesting STL with springThickness=${calculatedThickness}, strapWidth=${strapWidth}`);
         
-        showNotification('File downloaded successfully!', 'success');
-        
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification('Generation error: ' + error.message, 'error');
-    } finally {
-        button.innerHTML = originalText;
-        button.disabled = false;
-    }
-}
-
-// Display results function - Updated to show force and calculated thickness
-function displayResults(result, inputForce, calculatedThickness) {
-    const resultsContainer = document.getElementById('results');
-    const resultsContent = document.getElementById('results-content');
-    
-    if (result.status === 'success') {
-        resultsContent.innerHTML = `
-            <div class="result-item fade-in" style="animation-delay: 0.1s">
-                <div class="result-label">Input Force</div>
-                <div class="result-value">${inputForce} N</div>
-            </div>
-            <div class="result-item fade-in" style="animation-delay: 0.2s">
-                <div class="result-label">Calculated Thickness</div>
-                <div class="result-value">${calculatedThickness} mm</div>
-            </div>
-            <div class="result-item fade-in" style="animation-delay: 0.3s">
-                <div class="result-label">Strap Width</div>
-                <div class="result-value">${result.data.strapWidth} mm</div>
-            </div>
-            <div class="result-item fade-in" style="animation-delay: 0.4s">
-                <div class="result-label">Computed Value</div>
-                <div class="result-value">${result.data.computed_value.toFixed(2)}</div>
-            </div>
-            <div class="result-item fade-in" style="animation-delay: 0.5s">
-                <div class="result-label">Status</div>
-                <div class="result-value success">${result.data.status}</div>
-            </div>
-            <div class="result-item fade-in" style="animation-delay: 0.6s">
-                <div class="result-label">Timestamp</div>
-                <div class="result-value">${new Date(result.data.timestamp).toLocaleString()}</div>
-            </div>
-        `;
-        
-        resultsContainer.style.display = 'block';
-        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    } else {
-        showNotification('Data processing error', 'error');
-    }
-}
-
-// Function to update thickness in real-time when force changes
-function updateThicknessFromForce() {
-    const forceInput = document.getElementById('forceInput');
-    const thicknessDisplay = document.getElementById('calculatedThickness');
-    
-    if (forceInput && thicknessDisplay) {
-        forceInput.addEventListener('input', function() {
-            try {
-                const force = parseFloat(this.value);
-                if (!isNaN(force) && this.value !== '') {
-                    const thickness = estimerEpaisseur(force);
-                    thicknessDisplay.value = thickness;
-                } else {
-                    thicknessDisplay.value = '';
-                }
-            } catch (error) {
-                thicknessDisplay.value = 'Invalid range';
+        // Generate STL file
+        const response = await fetch(`${API_BASE_URL}/generate-stl/?springThickness=${calculatedThickness}&strapWidth=${parseFloat(strapWidth)}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/sla, application/octet-stream, */*',
+                'Content-Type': 'application/json',
             }
         });
-    }
-}
-
-// Navigation mobile
-function toggleMobileNav() {
-    const navLinks = document.querySelector('.nav-links');
-    const navToggle = document.querySelector('.nav-toggle');
-    
-    navLinks.classList.toggle('mobile-active');
-    navToggle.classList.toggle('active');
-}
-
-// Gestion du scroll avec throttle pour performance
-function handleScroll() {
-    if (scrollTimeout) {
-        clearTimeout(scrollTimeout);
-    }
-    
-    scrollTimeout = setTimeout(() => {
-        updateProgressThread();
-        updateNavbarBackground();
-    }, 10);
-}
-
-// Changer l'opacité de la navbar en fonction du scroll
-function updateNavbarBackground() {
-    const navbar = document.getElementById('main-nav');
-    const scrolled = window.pageYOffset;
-    const heroHeight = window.innerHeight;
-    
-    if (scrolled > heroHeight / 2) {
-        navbar.style.background = 'rgba(255,255,255,0.98)';
-        navbar.style.backdropFilter = 'blur(20px)';
-    } else {
-        navbar.style.background = 'rgba(255,255,255,0.9)';
-        navbar.style.backdropFilter = 'blur(10px)';
-    }
-}
-
-// Active section tracking - Updated for new thread
-function updateActiveSection() {
-    const sections = document.querySelectorAll('.content-section');
-    const threadSteps = document.querySelectorAll('.thread-step');
-    
-    let currentSection = '';
-    let activeIndex = 0;
-    
-    sections.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= 100 && rect.bottom >= 100) {
-            currentSection = section.id;
-            activeIndex = index;
-        }
-    });
-    
-    threadSteps.forEach((step, index) => {
-        step.classList.remove('active', 'completed');
-        if (step.dataset.section === currentSection) {
-            step.classList.add('active');
-        } else if (index < activeIndex) {
-            step.classList.add('completed');
-        }
-    });
-    
-    // Update progress line
-    const progressLine = document.getElementById('progress-line');
-    if (progressLine && threadSteps.length > 0) {
-        const progress = Math.min((activeIndex + 1) / threadSteps.length * 100, 100);
-        progressLine.style.height = `${progress}%`;
-    }
-}
-
-// Progress thread tracking
-function updateProgressThread() {
-    const sections = document.querySelectorAll('.content-section');
-    const threadSteps = document.querySelectorAll('.thread-step');
-    const progressLine = document.getElementById('progress-line');
-    
-    let currentSection = '';
-    let activeIndex = 0;
-    
-    // Déterminer la section active
-    sections.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
-        const sectionTop = rect.top;
-        const sectionHeight = rect.height;
-        const windowHeight = window.innerHeight;
         
-        // Section est considérée active si elle occupe le centre de l'écran
-        if (sectionTop <= windowHeight / 2 && sectionTop + sectionHeight >= windowHeight / 2) {
-            currentSection = section.id;
-            activeIndex = index;
-        }
-    });
-    
-    // Mettre à jour les étapes du fil
-    threadSteps.forEach((step, index) => {
-        step.classList.remove('active', 'completed');
+        console.log('📊 Response status:', response.status);
         
-        if (index < activeIndex) {
-            step.classList.add('completed');
-        } else if (index === activeIndex) {
-            step.classList.add('active');
+        if (response.status === 429) {
+            throw new Error('Rate limit exceeded. Please wait 20 seconds before trying again.');
         }
-    });
-    
-    // Mettre à jour la ligne de progression
-    if (progressLine) {
-        const progress = Math.min((activeIndex + 1) / threadSteps.length * 100, 100);
-        progressLine.style.height = `${progress}%`;
+        
+        if (!response.ok) {
+            const errorData = await response.json().catch(async () => {
+                const text = await response.text();
+                return { message: text || 'Unknown error' };
+            });
+            console.error('❌ API Error:', errorData);
+            throw new Error(`Error generating STL: ${errorData.message || errorData.detail || 'Unknown error'}`);
+        }
+        
+        // Get filename from Content-Disposition header if available
+        const contentDisposition = response.headers.get('content-disposition');
+        stlFilename = `TacTight_f${force}N_t${calculatedThickness}mm_w${strapWidth}mm.stl`;
+        
+        if (contentDisposition) {
+            const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+            if (filenameMatch && filenameMatch[1]) {
+                stlFilename = filenameMatch[1].replace(/['"]/g, '');
+            }
+        }
+        
+        // Store STL data
+        stlBlobData = await response.blob();
+        console.log('📦 Blob size:', stlBlobData.size, 'bytes');
+        
+        if (stlBlobData.size === 0) {
+            throw new Error('Generated STL file is empty');
+        }
+        
+        // Show success and download button
+        generateButton.innerHTML = '<span class="btn-icon">✅</span> Generated';
+        downloadButton.style.display = 'inline-flex';
+        
+        // Update download button text with file info
+        const fileSizeKB = Math.round(stlBlobData.size / 1024);
+        downloadButton.innerHTML = `Download STL (${fileSizeKB} KB)`;
+        
+        showNotification(`STL file "${stlFilename}" generated successfully! Click Download to save it.`, 'success');
+        
+    } catch (error) {
+        console.error('❌ Error:', error);
+        
+        if (error.message.includes('Rate limit')) {
+            showNotification(error.message, 'warning');
+        } else {
+            showNotification('Processing error: ' + error.message, 'error');
+        }
+        
+        // Hide download button on error
+        downloadButton.style.display = 'none';
+    } finally {
+        // Reset generate button
+        generateButton.innerHTML = originalText;
+        generateButton.disabled = false;
     }
 }
 
-// Gestion du scroll avec throttle pour performance
-let scrollTimeout;
-function handleScroll() {
-    if (scrollTimeout) {
-        clearTimeout(scrollTimeout);
+
+// New download function
+function downloadFile() {
+    if (!stlBlobData || !stlFilename) {
+        showNotification('No file available for download', 'error');
+        return;
     }
     
-    scrollTimeout = setTimeout(() => {
-        updateProgressThread();
-        updateNavbarBackground();
-    }, 10);
+    try {
+        // Create and trigger download
+        const url = window.URL.createObjectURL(stlBlobData);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = stlFilename;
+        a.style.display = 'none';
+        
+        document.body.appendChild(a);
+        a.click();
+        
+        // Clean up
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 100);
+        
+        showNotification(`File "${stlFilename}" downloaded successfully!`, 'success');
+        
+    } catch (error) {
+        console.error('❌ Download error:', error);
+        showNotification('Download error: ' + error.message, 'error');
+    }
 }
 
-// Changer l'opacité de la navbar en fonction du scroll
-function updateNavbarBackground() {
-    const navbar = document.getElementById('main-nav');
-    const scrolled = window.pageYOffset;
-    const heroHeight = window.innerHeight;
+// Add notification system
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
     
-    if (scrolled > heroHeight / 2) {
-        navbar.style.background = 'rgba(255,255,255,0.98)';
-        navbar.style.backdropFilter = 'blur(20px)';
-    } else {
-        navbar.style.background = 'rgba(255,255,255,0.9)';
-        navbar.style.backdropFilter = 'blur(10px)';
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    
+    // Set icon based on type
+    let icon = 'ℹ️';
+    switch (type) {
+        case 'success':
+            icon = '✅';
+            break;
+        case 'error':
+            icon = '❌';
+            break;
+        case 'warning':
+            icon = '⚠️';
+            break;
     }
+    
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-icon">${icon}</span>
+            <span class="notification-message">${message}</span>
+        </div>
+    `;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Show with animation
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 5000);
 }
+
 
 // Event listeners
 window.addEventListener('scroll', function() {
     updateActiveSection();
     updateNavbarBackground();
 }, { passive: true });
+
 window.addEventListener('resize', updateProgressThread);
-
-// Navigation mobile
-function toggleMobileNav() {
-    const navLinks = document.querySelector('.nav-links');
-    const navToggle = document.querySelector('.nav-toggle');
-    
-    navLinks.classList.toggle('mobile-active');
-    navToggle.classList.toggle('active');
-}
-
-// Process data function - Updated to calculate thickness from force
-async function processData() {
-    const forceInput = document.getElementById('forceInput').value;
-    const strapWidth = document.getElementById('strapWidth').value;
-    
-    if (!forceInput || !strapWidth) {
-        showNotification('Please fill in all fields', 'warning');
-        return;
-    }
-    
-    // Animation de chargement
-    const button = event.target;
-    const originalText = button.innerHTML;
-    button.innerHTML = '<span class="btn-icon">⏳</span> Analyzing...';
-    button.disabled = true;
-    
-    try {
-        // Calculate thickness from force
-        const force = parseFloat(forceInput);
-        const calculatedThickness = estimerEpaisseur(force);
-        
-        // Update the thickness display
-        document.getElementById('calculatedThickness').value = calculatedThickness;
-        
-        const response = await fetch(`${API_BASE_URL}/process`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                thicknessSpring: calculatedThickness,
-                strapWidth: parseFloat(strapWidth)
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error('Erreur lors du traitement des données');
-        }
-        
-        const result = await response.json();
-        displayResults(result, force, calculatedThickness);
-        showNotification('Analysis completed successfully!', 'success');
-        
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification('Processing error: ' + error.message, 'error');
-    } finally {
-        button.innerHTML = originalText;
-        button.disabled = false;
-    }
-}
-
-// Generate file function - Updated to use calculated thickness
-async function generateFile() {
-    const forceInput = document.getElementById('forceInput').value;
-    const strapWidth = document.getElementById('strapWidth').value;
-    
-    if (!forceInput || !strapWidth) {
-        showNotification('Please fill in all fields', 'warning');
-        return;
-    }
-    
-    // Animation de chargement
-    const button = event.target;
-    const originalText = button.innerHTML;
-    button.innerHTML = '<span class="btn-icon">📁</span> Generating...';
-    button.disabled = true;
-    
-    try {
-        // Calculate thickness from force
-        const force = parseFloat(forceInput);
-        const calculatedThickness = estimerEpaisseur(force);
-        
-        const response = await fetch(`${API_BASE_URL}/generate-file`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                thicknessSpring: calculatedThickness,
-                strapWidth: parseFloat(strapWidth)
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error('Erreur lors de la génération du fichier');
-        }
-        
-        // Create download link
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `haptistrap_results_f${force}_t${calculatedThickness}_w${strapWidth}.csv`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-        
-        showNotification('File downloaded successfully!', 'success');
-        
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification('Generation error: ' + error.message, 'error');
-    } finally {
-        button.innerHTML = originalText;
-        button.disabled = false;
-    }
-}
-
-// Display results function - Updated to show force and calculated thickness
-function displayResults(result, inputForce, calculatedThickness) {
-    const resultsContainer = document.getElementById('results');
-    const resultsContent = document.getElementById('results-content');
-    
-    if (result.status === 'success') {
-        resultsContent.innerHTML = `
-            <div class="result-item fade-in" style="animation-delay: 0.1s">
-                <div class="result-label">Input Force</div>
-                <div class="result-value">${inputForce} N</div>
-            </div>
-            <div class="result-item fade-in" style="animation-delay: 0.2s">
-                <div class="result-label">Calculated Thickness</div>
-                <div class="result-value">${calculatedThickness} mm</div>
-            </div>
-            <div class="result-item fade-in" style="animation-delay: 0.3s">
-                <div class="result-label">Strap Width</div>
-                <div class="result-value">${result.data.strapWidth} mm</div>
-            </div>
-            <div class="result-item fade-in" style="animation-delay: 0.4s">
-                <div class="result-label">Computed Value</div>
-                <div class="result-value">${result.data.computed_value.toFixed(2)}</div>
-            </div>
-            <div class="result-item fade-in" style="animation-delay: 0.5s">
-                <div class="result-label">Status</div>
-                <div class="result-value success">${result.data.status}</div>
-            </div>
-            <div class="result-item fade-in" style="animation-delay: 0.6s">
-                <div class="result-label">Timestamp</div>
-                <div class="result-value">${new Date(result.data.timestamp).toLocaleString()}</div>
-            </div>
-        `;
-        
-        resultsContainer.style.display = 'block';
-        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    } else {
-        showNotification('Data processing error', 'error');
-    }
-}
-
-// Function to update thickness in real-time when force changes
-function updateThicknessFromForce() {
-    const forceInput = document.getElementById('forceInput');
-    const thicknessDisplay = document.getElementById('calculatedThickness');
-    
-    if (forceInput && thicknessDisplay) {
-        forceInput.addEventListener('input', function() {
-            try {
-                const force = parseFloat(this.value);
-                if (!isNaN(force) && this.value !== '') {
-                    const thickness = estimerEpaisseur(force);
-                    thicknessDisplay.value = thickness;
-                } else {
-                    thicknessDisplay.value = '';
-                }
-            } catch (error) {
-                thicknessDisplay.value = 'Invalid range';
-            }
-        });
-    }
-}
-
-// Animations au scroll (Intersection Observer)
-function setupScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-            }
-        });
-    }, observerOptions);
-    
-    // Observer les éléments à animer
-    document.querySelectorAll('.research-card, .tech-card, .team-member, .publication-item').forEach(el => {
-        observer.observe(el);
-    });
-}
-
-// Initialize on page load - Updated to include thickness calculation
-document.addEventListener('DOMContentLoaded', function() {
-    updateActiveSection();
-    setupScrollAnimations();
-    updateThicknessFromForce();
-    
-    // Add click listeners for thread steps
-    document.querySelectorAll('.thread-step').forEach((step) => {
-        step.addEventListener('click', function(e) {
-            e.preventDefault();
-            const sectionId = this.dataset.section;
-            if (sectionId) {
-                scrollToSection(sectionId);
-            }
-        });
-    });
-    
-    // Smooth scroll pour tous les liens d'ancrage
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-});

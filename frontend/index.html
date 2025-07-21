@@ -201,14 +201,7 @@
                                     </div>
                                     <small class="input-help">Force value between 4.92 N and 10.40 N</small>
                                 </div>
-                                <div class="form-group">
-                                    <label for="calculatedThickness">Calculated Thickness (mm)</label>
-                                    <div class="input-wrapper">
-                                        <input type="text" id="calculatedThickness" readonly placeholder="Auto-calculated" />
-                                        <span class="input-unit">mm</span>
-                                    </div>
-                                    <small class="input-help">Automatically calculated from force using interpolation</small>
-                                </div>
+                               
                                 <div class="form-group">
                                     <label for="strapWidth">Strap Width (mm)</label>
                                     <div class="input-wrapper">
@@ -220,25 +213,17 @@
                             </div>
                             
                             <div class="action-panel">
-                                <button onclick="processData()" class="btn btn-primary">
-                                    Analyze Data
+                                <button onclick="processData(event)" class="btn btn-primary">
+                                    Generate STL
                                 </button>
-                                <button onclick="generateFile()" class="btn btn-secondary">
-                                    Generate Report
+
+                                <button onclick="downloadFile()" class="btn btn-secondary download-btn">
+                                    Download STL
                                 </button>
                             </div>
+                            
                         </div>
 
-                        <div id="results" class="results-container" style="display: none;">
-                            <div class="results-header">
-                                <h3>Analysis Results</h3>
-                                <div class="results-status">
-                                    <span class="status-indicator success"></span>
-                                    <span>Analysis completed</span>
-                                </div>
-                            </div>
-                            <div id="results-content" class="results-content"></div>
-                        </div>
                     </div>
                 </div>
             </div>
