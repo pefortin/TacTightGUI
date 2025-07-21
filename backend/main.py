@@ -9,7 +9,19 @@ import subprocess
 import datetime
 import os
 import shutil
+from pydantic import BaseModel, Field
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import smtplib
+import os
+from datetime import datetime
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Initialize FastAPI app
 app = FastAPI()
 
 # Add CORS middleware
@@ -110,3 +122,185 @@ async def generate_stl(
         media_type='application/sla',
         headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
+
+# Contact form models
+class ContactRequest(BaseModel):
+    to: str = Field(..., description="Recipient email")
+    from_email: str = Field(..., alias="from", description="Sender email")
+    name: str = Field(..., min_length=1, max_length=100, description="Sender name")
+    subject: str = Field(..., min_length=1, max_length=200, description="Email subject")
+    message: str = Field(..., min_length=10, max_length=5000, description="Email message")
+    originalData: dict = Field(default={}, description="Original form data")
+
+class ContactResponse(BaseModel):
+    success: bool
+    message: str
+    timestamp: str
+
+@app.post("/contact", response_model=ContactResponse)
+async def send_contact_form(contact: ContactRequest):
+    """
+    Send contact form email to the specified recipient
+    """
+    try:
+        logger.info(f"📧 Processing contact form from {contact.name} ({contact.from_email})")
+        
+        # Validate email addresses (basic validation)
+        if not contact.from_email or "@" not in contact.from_email:
+            raise HTTPException(status_code=400, detail="Invalid sender email address")
+        
+        if not contact.to or "@" not in contact.to:
+            raise HTTPException(status_code=400, detail="Invalid recipient email address")
+        
+        # Create email content
+        timestamp = datetime.now().isoformat()
+        
+        # HTML email template
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .header {{ background: #6b8915; color: white; padding: 20px; text-align: center; }}
+                .content {{ padding: 20px; background: #f9f9f9; }}
+                .footer {{ padding: 10px; text-align: center; font-size: 12px; color: #666; }}
+                .info-box {{ background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #6b8915; }}
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h2>TacTight Contact Form</h2>
+            </div>
+            <div class="content">
+                <div class="info-box">
+                    <h3>Contact Information</h3>
+                    <p><strong>Name:</strong> {contact.name}</p>
+                    <p><strong>Email:</strong> {contact.from_email}</p>
+                    <p><strong>Subject:</strong> {contact.subject}</p>
+                    <p><strong>Date:</strong> {timestamp}</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Message</h3>
+                    <p>{contact.message.replace(chr(10), '<br>')}</p>
+                </div>
+            </div>
+            <div class="footer">
+                <p>This message was sent through the TacTight website contact form.</p>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Plain text version
+        text_content = f"""
+        TacTight Contact Form Submission
+        
+        Name: {contact.name}
+        Email: {contact.from_email}
+        Subject: {contact.subject}
+        Date: {timestamp}
+        
+        Message:
+        {contact.message}
+        
+        ---
+        This message was sent through the TacTight website contact form.
+        """
+        
+        # Try to send email using different methods
+        email_sent = False
+        error_message = ""
+        
+        # Method 1: Try SMTP if configured
+        try:
+            smtp_server = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
+            smtp_port = int(os.getenv('SMTP_PORT', '587'))
+            smtp_username = os.getenv('SMTP_USERNAME', '')
+            smtp_password = os.getenv('SMTP_PASSWORD', '')
+            
+            if smtp_username and smtp_password:
+                msg = MIMEMultipart('alternative')
+                msg['Subject'] = f"TacTight Contact: {contact.subject}"
+                msg['From'] = smtp_username
+                msg['To'] = contact.to
+                msg['Reply-To'] = contact.from_email
+                
+                # Attach parts
+                text_part = MIMEText(text_content, 'plain')
+                html_part = MIMEText(html_content, 'html')
+                
+                msg.attach(text_part)
+                msg.attach(html_part)
+                
+                # Send the email
+                server = smtplib.SMTP(smtp_server, smtp_port)
+                server.starttls()
+                server.login(smtp_username, smtp_password)
+                server.send_message(msg)
+                server.quit()
+                
+                email_sent = True
+                logger.info(f"✅ Email sent successfully via SMTP to {contact.to}")
+                
+        except Exception as smtp_error:
+            error_message = f"SMTP error: {str(smtp_error)}"
+            logger.warning(f"⚠️ SMTP sending failed: {error_message}")
+        
+        # Method 2: Log to file as fallback (always do this for backup)
+        try:
+            log_dir = "contact_logs"
+            os.makedirs(log_dir, exist_ok=True)
+            
+            log_filename = f"contact_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+            log_path = os.path.join(log_dir, log_filename)
+            
+            with open(log_path, 'w', encoding='utf-8') as f:
+                f.write("="*50 + "\n")
+                f.write("TACTIGHT CONTACT FORM SUBMISSION\n")
+                f.write("="*50 + "\n")
+                f.write(f"Timestamp: {timestamp}\n")
+                f.write(f"Name: {contact.name}\n")
+                f.write(f"Email: {contact.from_email}\n")
+                f.write(f"Subject: {contact.subject}\n")
+                f.write(f"Recipient: {contact.to}\n")
+                f.write("-"*30 + "\n")
+                f.write("MESSAGE:\n")
+                f.write("-"*30 + "\n")
+                f.write(contact.message)
+                f.write("\n" + "="*50 + "\n")
+                
+                if error_message:
+                    f.write(f"EMAIL ERROR: {error_message}\n")
+                    f.write("="*50 + "\n")
+            
+            logger.info(f"📝 Contact form logged to {log_path}")
+            
+        except Exception as log_error:
+            logger.error(f"❌ Failed to log contact form: {log_error}")
+        
+        # Determine response
+        if email_sent:
+            return ContactResponse(
+                success=True,
+                message="Message sent successfully! We will get back to you soon.",
+                timestamp=timestamp
+            )
+        else:
+            # Email failed but we logged it
+            logger.warning(f"📧 Email sending failed but contact form was logged: {error_message}")
+            return ContactResponse(
+                success=True,  # Still return success since we logged it
+                message="Message received and logged. We will get back to you soon.",
+                timestamp=timestamp
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Contact form error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to process contact form: {str(e)}"
+        )
