@@ -364,10 +364,170 @@ function showNotification(message, type = 'info') {
 }
 
 
-// Event listeners
+
+// Contact form functionality
+function initContactForm() {
+    const contactForm = document.getElementById('contactForm');
+    if (!contactForm) return;
+
+    contactForm.addEventListener('submit', handleContactFormSubmit);
+    
+    // Add real-time validation
+    const inputs = contactForm.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('blur', validateField);
+        input.addEventListener('input', clearFieldError);
+    });
+}
+
+function validateField(event) {
+    const field = event.target;
+    const value = field.value.trim();
+    let isValid = true;
+    let errorMessage = '';
+
+    // Remove previous error message
+    const existingError = field.parentNode.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+
+    // Validation rules
+    if (field.hasAttribute('required') && !value) {
+        isValid = false;
+        errorMessage = 'This field is required';
+    } else if (field.type === 'email' && value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            isValid = false;
+            errorMessage = 'Please enter a valid email address';
+        }
+    } else if (field.name === 'message' && value && value.length < 10) {
+        isValid = false;
+        errorMessage = 'Message should be at least 10 characters long';
+    }
+
+    // Apply validation styles
+    if (!isValid) {
+        field.classList.add('error');
+        field.classList.remove('success');
+        
+        const errorSpan = document.createElement('span');
+        errorSpan.className = 'error-message';
+        errorSpan.textContent = errorMessage;
+        field.parentNode.appendChild(errorSpan);
+    } else if (value) {
+        field.classList.remove('error');
+        field.classList.add('success');
+    }
+
+    return isValid;
+}
+
+function clearFieldError(event) {
+    const field = event.target;
+    if (field.classList.contains('error')) {
+        field.classList.remove('error');
+        const errorMessage = field.parentNode.querySelector('.error-message');
+        if (errorMessage) {
+            errorMessage.remove();
+        }
+    }
+}
+
+async function handleContactFormSubmit(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const submitButton = form.querySelector('.contact-submit');
+    const originalButtonText = submitButton.innerHTML;
+    
+    // Validate all fields
+    const inputs = form.querySelectorAll('input, textarea');
+    let isFormValid = true;
+    
+    inputs.forEach(input => {
+        const fieldEvent = { target: input };
+        if (!validateField(fieldEvent)) {
+            isFormValid = false;
+        }
+    });
+    
+    if (!isFormValid) {
+        showNotification('Please correct the errors in the form', 'error');
+        return;
+    }
+    
+    // Get form data
+    const formData = new FormData(form);
+    const contactData = {
+        name: formData.get('name').trim(),
+        email: formData.get('email').trim(),
+        subject: formData.get('subject').trim(),
+        message: formData.get('message').trim()
+    };
+    
+    // Show loading state
+    submitButton.innerHTML = '<span class="spinner"></span> Sending...';
+    submitButton.disabled = true;
+    
+    try {
+        // Simulate API call (you'll need to implement the actual backend endpoint)
+        const response = await fetch(`${API_BASE_URL}/contact`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                to: 'p5fortin@uqac.ca',
+                from: contactData.email,
+                name: contactData.name,
+                subject: `TacTight Contact: ${contactData.subject}`,
+                message: `From: ${contactData.name} (${contactData.email})\n\nSubject: ${contactData.subject}\n\nMessage:\n${contactData.message}`,
+                originalData: contactData
+            })
+        });
+        
+        if (response.ok) {
+            showNotification('Message sent successfully! We will get back to you soon.', 'success');
+            form.reset();
+            
+            // Remove validation classes
+            inputs.forEach(input => {
+                input.classList.remove('success', 'error');
+            });
+            
+            submitButton.innerHTML = '<span class="btn-icon">✅</span> Message Sent';
+            
+            // Reset button after 3 seconds
+            setTimeout(() => {
+                submitButton.innerHTML = originalButtonText;
+                submitButton.disabled = false;
+            }, 3000);
+            
+        } else {
+            throw new Error('Failed to send message');
+        }
+        
+    } catch (error) {
+        console.error('Contact form error:', error);
+        showNotification('Failed to send message. Please try again or contact us directly at p5fortin@uqac.ca', 'error');
+        
+        submitButton.innerHTML = originalButtonText;
+        submitButton.disabled = false;
+    }
+}
+
+// Update the existing event listeners
 window.addEventListener('scroll', function() {
     updateActiveSection();
     updateNavbarBackground();
 }, { passive: true });
 
 window.addEventListener('resize', updateProgressThread);
+
+// Initialize contact form when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initContactForm();
+});
+

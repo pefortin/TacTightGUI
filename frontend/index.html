@@ -406,9 +406,48 @@
                     <div class="section-divider"></div>
                 </div>
                 
-
+                <div class="section-content">
+                    <div class="contact-intro">
+                        <p class="lead-paragraph">
+                            If you have any question, feedback or comment, feel free to contact us and we will do our best to help you.
+                        </p>
+                    </div>
+                    
+                    <div class="contact-form-container">
+                        <form id="contactForm" class="contact-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="contactName">Name *</label>
+                                    <input type="text" id="contactName" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactEmail">Email *</label>
+                                    <input type="email" id="contactEmail" name="email" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contactSubject">Subject *</label>
+                                <input type="text" id="contactSubject" name="subject" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contactMessage">Message *</label>
+                                <textarea id="contactMessage" name="message" rows="6" required placeholder="Please describe your question, feedback, or comment..."></textarea>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary contact-submit">
+                                    Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </section>
+
+
     </main>
 
     <!-- Footer -->
