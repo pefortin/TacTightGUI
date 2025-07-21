@@ -182,24 +182,32 @@
                 </div>
                 <div class="section-content">
                     <div class="analysis-intro">
-                        <p class="lead-paragraph">Use the interface below to analyze your scientific parameters and generate detailed reports.</p>
+                        <p class="lead-paragraph">Enter the desired force to calculate the corresponding thickness, then analyze your scientific parameters.</p>
                     </div>
                     
                     <div class="analysis-panel">
                         <div class="panel-header">
                             <h3>Input Parameters</h3>
-                            <p>Please enter the values for analysis</p>
+                            <p>Please enter the force value for automatic thickness calculation</p>
                         </div>
                         
                         <div class="parameter-form">
                             <div class="input-grid">
                                 <div class="form-group">
-                                    <label for="thicknessSpring">Spring Thickness (mm)</label>
+                                    <label for="forceInput">Desired Force (N)</label>
                                     <div class="input-wrapper">
-                                        <input type="number" id="thicknessSpring" step="0.01" placeholder="0.00" />
+                                        <input type="number" id="forceInput" step="0.01" min="4.92" max="10.40" placeholder="0.00" />
+                                        <span class="input-unit">N</span>
+                                    </div>
+                                    <small class="input-help">Force value between 4.92 N and 10.40 N</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="calculatedThickness">Calculated Thickness (mm)</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" id="calculatedThickness" readonly placeholder="Auto-calculated" />
                                         <span class="input-unit">mm</span>
                                     </div>
-                                    <small class="input-help">Spring thickness value in millimeters</small>
+                                    <small class="input-help">Automatically calculated from force using interpolation</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="strapWidth">Strap Width (mm)</label>
@@ -364,11 +372,6 @@
                 <p>&copy; 2024 Haptistrap. All rights reserved.</p>
             </div>
         </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
     </footer>
 
     <script src="script.js"></script>
