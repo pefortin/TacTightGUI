@@ -164,7 +164,7 @@ function toggleMobileNav() {
 }
 
 
-// Process data function - Updated with simple spinner and visible download button
+// Process data function - Updated to properly handle download button state
 async function processData(event) {
     if (!event) {
         event = window.event;
@@ -187,8 +187,14 @@ async function processData(event) {
     generateButton.innerHTML = '<span class="spinner"></span> Generating...';
     generateButton.disabled = true;
     
-    // Hide download button while processing
-    downloadButton.style.display = 'none';
+    // Disable download button and show it as unavailable
+    downloadButton.disabled = true;
+    downloadButton.innerHTML = 'Download STL (Processing...)';
+    downloadButton.style.display = 'inline-flex';
+    
+    // Clear previous STL data
+    stlBlobData = null;
+    stlFilename = null;
     
     try {
         // Calculate thickness from force
@@ -249,12 +255,11 @@ async function processData(event) {
             throw new Error('Generated STL file is empty');
         }
         
-        // Show success and download button
+        // Show success and enable download button
         generateButton.innerHTML = '<span class="btn-icon">✅</span> Generated';
-        downloadButton.style.display = 'inline-flex';
         
-        // Update download button text with file info
-        const fileSizeKB = Math.round(stlBlobData.size / 1024);
+        // Enable download button and update text
+        downloadButton.disabled = false;
         downloadButton.innerHTML = `Download STL`;
         
         showNotification(`STL file "${stlFilename}" generated successfully! Click Download to save it.`, 'success');
@@ -268,8 +273,13 @@ async function processData(event) {
             showNotification('Processing error: ' + error.message, 'error');
         }
         
-        // Hide download button on error
-        downloadButton.style.display = 'none';
+        // Keep download button disabled and show error state
+        downloadButton.disabled = true;
+        downloadButton.innerHTML = 'Download STL (Error)';
+        
+        // Clear STL data on error
+        stlBlobData = null;
+        stlFilename = null;
     } finally {
         // Reset generate button
         generateButton.innerHTML = originalText;
@@ -277,12 +287,17 @@ async function processData(event) {
     }
 }
 
-
-
-// New download function - Updated to create ZIP with fixed name
+// Updated download function with additional checks
 async function downloadFile() {
     if (!stlBlobData || !stlFilename) {
-        showNotification('No file available for download', 'error');
+        showNotification('No file available for download. Please generate an STL first.', 'error');
+        return;
+    }
+    
+    const downloadButton = document.querySelector('.download-btn');
+    
+    // Prevent multiple downloads
+    if (downloadButton.disabled) {
         return;
     }
     
@@ -292,6 +307,10 @@ async function downloadFile() {
             showNotification('ZIP library not loaded. Please refresh the page and try again.', 'error');
             return;
         }
+        
+        // Temporarily disable button during download
+        downloadButton.disabled = true;
+        downloadButton.innerHTML = '<span class="spinner"></span> Preparing Download...';
         
         const zip = new JSZip();
         
@@ -344,8 +363,13 @@ async function downloadFile() {
     } catch (error) {
         console.error('❌ Download error:', error);
         showNotification('Download error: ' + error.message, 'error');
+    } finally {
+        // Re-enable download button
+        downloadButton.disabled = false;
+        downloadButton.innerHTML = 'Download STL';
     }
 }
+
 
 
 

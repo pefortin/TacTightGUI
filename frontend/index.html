@@ -21,9 +21,9 @@
                 <p class="hero-description">Reliable skin-device coupling remains a challenge in research involving wearable systems that require consistent mechanical contact with the skin. 
                     Currently, researchers often rely on their own subjective perception of how tight a device feels when attaching it to participants, introducing variability and limiting the repeatability of their results.
                     TacTight is a simple, compact, fully 3D-printed system designed to standardize the contact force between wearable devices and the skin using a straightforward visual indicator.
-                    No sensors. No cables. No electronics.
                     All you need is access to a 3D printer!
                 </p>
+                <p class="hero-description">No sensors. No cables. No electronics.</p>
                 <button onclick="scrollToSection('how-to-use')" class="hero-cta">Start Process</button>
             </div>
         </div>
@@ -68,10 +68,10 @@
                 <h1>TacTight</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="#problematiques" onclick="scrollToSection('problematiques')">Problematic</a></li>
-                <li><a href="#info-generale" onclick="scrollToSection('info-generale')">Information</a></li>
-                <li><a href="#how-to-use" onclick="scrollToSection('how-to-use')">Usage</a></li>
-                <li><a href="#auteurs" onclick="scrollToSection('auteurs')">Authors</a></li>
+                <li><a href="#problematiques" onclick="scrollToSection('problematiques')">Context</a></li>
+                <li><a href="#info-generale" onclick="scrollToSection('info-generale')">How Does It Work ?</a></li>
+                <li><a href="#how-to-use" onclick="scrollToSection('how-to-use')">Make your Own TacTight</a></li>
+                <li><a href="#auteurs" onclick="scrollToSection('auteurs')">Research Team</a></li>
                 <li><a href="#contact" onclick="scrollToSection('contact')">Contact</a></li>
             </ul>
             <div class="nav-toggle" onclick="toggleMobileNav()">
@@ -89,17 +89,17 @@
         
         <div class="thread-step" data-section="problematiques">
             <div class="step-circle">01</div>
-            <div class="step-label">Problematic</div>
+            <div class="step-label">Context</div>
         </div>
         
         <div class="thread-step" data-section="info-generale">
             <div class="step-circle">02</div>
-            <div class="step-label">Information</div>
+            <div class="step-label">Use</div>
         </div>
         
         <div class="thread-step" data-section="how-to-use">
             <div class="step-circle">03</div>
-            <div class="step-label">Usage</div>
+            <div class="step-label">Make</div>
         </div>
         
         <div class="thread-step" data-section="auteurs">
@@ -119,7 +119,7 @@
         <section id="problematiques" class="content-section">
             <div class="container">
                 <div class="section-header">
-                    <h2>Scientific Problematic</h2>
+                    <h2>Context</h2>
                     <div class="section-divider"></div>
                 </div>
                 <div class="section-content">
@@ -408,14 +408,14 @@
                                     Generate STL
                                 </button>
 
-                                <button onclick="downloadFile()" class="btn btn-secondary download-btn">
+                                <button onclick="downloadFile()" class="btn btn-secondary download-btn" disabled>
                                     Download STL
                                 </button>
                             </div>
                                 <div class="disclaimer-remark">
                                     <div class="remark-icon">⚠️</div>
                                     <div class="remark-content">
-                                        <h4>Important Notice</h4>
+                                        <h4>Important</h4>
                                         <p>Due to variability in 3D printer calibration, PLA materials, and other factors, it is impossible for us to guarantee that your TacTight will exert precisely the intended force when the visual indicator is aligned. However, our system characterization and evaluation with human participants give us confidence that this method provides a more objective and reliable fit than relying solely on subjective perceptions of tightness.</p>
                                     </div>
                                 </div>
