@@ -20,7 +20,7 @@ function linearInterpolation(x, x0, x1, y0, y1) {
 function estimerEpaisseur(force) {
     // Vérifie si force dans plage mesurée
     if (force < Math.min(...forces_4mm) || force > Math.max(...forces_4mm)) {
-        throw new Error(`La force doit être comprise entre ${Math.min(...forces_4mm).toFixed(2)} N et ${Math.max(...forces_4mm).toFixed(2)} N.`);
+        throw new Error(`Force must be between ${Math.min(...forces_4mm).toFixed(2)} N and ${Math.max(...forces_4mm).toFixed(2)} N.`);
     }
     
     // Find the two closest points for interpolation
@@ -194,10 +194,7 @@ async function processData(event) {
         // Calculate thickness from force
         const force = parseFloat(forceInput);
         const calculatedThickness = estimerEpaisseur(force);
-        
-        // Remove this line - no longer updating thickness display
-        // document.getElementById('calculatedThickness').value = calculatedThickness;
-        
+                
         // Validate inputs
         if (calculatedThickness < 3 || calculatedThickness > 5) {
             throw new Error('Calculated thickness must be between 3 and 5 mm');
