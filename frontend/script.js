@@ -611,6 +611,57 @@ function initProgressThreadNavigation() {
     });
 }
 
+
+// Image Modal Functions
+function openImageModal(img) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+    
+    modal.style.display = 'flex';
+    modalImg.src = img.src;
+    modalImg.alt = img.alt;
+    modalCaption.textContent = img.alt;
+    
+    // Trigger animation
+    setTimeout(() => {
+        modal.classList.add('show');
+    }, 10);
+    
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    
+    modal.classList.remove('show');
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+        // Restore body scrolling
+        document.body.style.overflow = 'auto';
+    }, 300);
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeImageModal();
+    }
+});
+
+// Prevent modal from closing when clicking on the image itself
+document.addEventListener('DOMContentLoaded', function() {
+    const modalContent = document.getElementById('modalImage');
+    if (modalContent) {
+        modalContent.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    }
+});
+
+
 // Update the existing event listeners
 window.addEventListener('scroll', function() {
     updateActiveSection();
@@ -642,3 +693,5 @@ window.addEventListener('pageshow', function(event) {
         window.scrollTo(0, 0);
     }, 10);
 });
+
+
