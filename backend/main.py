@@ -56,7 +56,7 @@ app.add_middleware(SlowAPIMiddleware)
 async def root():
     return {"message": "Haptistrap API is running"}
 
-@app.get("/generate-stl/")
+@app.get("/api/generate-stl/")  # Ajouter cette route pour gérer les requêtes avec /api/
 @limiter.limit("1/20 seconds")
 async def generate_stl(
     request: Request,

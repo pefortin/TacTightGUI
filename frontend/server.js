@@ -31,7 +31,6 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Proxy pour les appels API
-// Proxy pour les appels API
 app.use('/api', createProxyMiddleware({
     target: API_URL,
     changeOrigin: true,
