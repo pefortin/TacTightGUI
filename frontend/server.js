@@ -48,6 +48,9 @@ app.use('/api', createProxyMiddleware({
         
         console.log(`✅ Response from ${req.url}: ${proxyRes.statusCode}`);
     },
+    onProxyReq: (proxyReq, req, res) => {
+    console.log(`🔄 Proxying ${req.method} ${req.url} to ${API_URL}${proxyReq.path}`);
+    },
     onError: (err, req, res) => {
         console.error('❌ Proxy error:', err.message);
         res.status(500).json({
@@ -112,3 +115,4 @@ process.on('SIGINT', () => {
     console.log('🛑 SIGINT received, shutting down gracefully');
     process.exit(0);
 });
+
