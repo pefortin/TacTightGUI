@@ -2643,3 +2643,12 @@ body {
     }
 }
 
+
+
+
+/* Fix for mobile: add padding-top to body so TacTight is always visible */
+@media (max-width: 768px) {
+    body {
+        padding-top: 80px; /* hauteur de .top-nav */
+    }
+}
