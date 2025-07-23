@@ -37,8 +37,13 @@ app.use('/api', createProxyMiddleware({
     pathRewrite: {
         '^/api': '', // Enlever /api du chemin
     },
-    onProxyReq: (proxyReq, req, res) => {
-        console.log(`🔄 Proxying ${req.method} ${req.url} to ${API_URL}`);
+    onProxyRes: (proxyRes, req, res) => {
+        // Ajouter les headers CORS à la réponse du proxy
+        proxyRes.headers['Access-Control-Allow-Origin'] = '*';
+        proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+        proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Accept';
+        
+        console.log(`✅ Response from ${req.url}: ${proxyRes.statusCode}`);
     },
     onProxyReq: (proxyReq, req, res) => {
     console.log(`🔄 Proxying ${req.method} ${req.url} to ${API_URL}${proxyReq.path}`);
