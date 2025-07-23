@@ -2649,6 +2649,10 @@ body {
 /* Fix for mobile: add padding-top to body so TacTight is always visible */
 @media (max-width: 768px) {
     body {
-        padding-top: 110px; /* hauteur de .top-nav */
+        padding-top: 80px; /* hauteur de .top-nav */
+    }
+    .hero-section {
+        padding-top: 110px; /* Augmente le padding pour dégager le bouton */
+        height: calc(100vh - 110px); /* Ajuste la hauteur pour compenser */
     }
 }
