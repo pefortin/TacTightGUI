@@ -31,22 +31,20 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Proxy pour les appels API
+// Proxy pour les appels API
 app.use('/api', createProxyMiddleware({
     target: API_URL,
     changeOrigin: true,
     pathRewrite: {
         '^/api': '', // Enlever /api du chemin
     },
-    onProxyRes: (proxyRes, req, res) => {
-        // Ajouter les headers CORS à la réponse du proxy
-        proxyRes.headers['Access-Control-Allow-Origin'] = '*';
-        proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
-        proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Accept';
-        
-        console.log(`✅ Response from ${req.url}: ${proxyRes.statusCode}`);
-    },
+    logLevel: 'debug', // Ajouter pour debug
     onProxyReq: (proxyReq, req, res) => {
-    console.log(`🔄 Proxying ${req.method} ${req.url} to ${API_URL}${proxyReq.path}`);
+        console.log(`🔄 Original URL: ${req.url}`);
+        console.log(`🔄 Proxying ${req.method} to ${API_URL}${proxyReq.path}`);
+    },
+    onProxyRes: (proxyRes, req, res) => {
+        console.log(`✅ Response from ${req.url}: ${proxyRes.statusCode}`);
     },
     onError: (err, req, res) => {
         console.error('❌ Proxy error:', err.message);
