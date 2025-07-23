@@ -665,6 +665,13 @@ function closeImageModal() {
     }, 300);
 }
 
+function toggleMobileNav() {
+    const navLinks = document.querySelector('.nav-links');
+    const navToggle = document.querySelector('.nav-toggle');
+    navLinks.classList.toggle('mobile-active');
+    navToggle.classList.toggle('active');
+}
+
 // Close modal with Escape key
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
@@ -680,6 +687,17 @@ document.addEventListener('DOMContentLoaded', function() {
             event.stopPropagation();
         });
     }
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            const navToggle = document.querySelector('.nav-toggle');
+            if (navLinks.classList.contains('mobile-active')) {
+                navLinks.classList.remove('mobile-active');
+                navToggle.classList.remove('active');
+            }
+        });
+    });
 });
 
 
