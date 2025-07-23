@@ -2652,7 +2652,7 @@ body {
         padding-top: 80px; /* hauteur de .top-nav */
     }
      .hero-section {
-        padding-top: 140px; /* Augmente pour dégager le bouton */
-        height: calc(100vh - 140px); /* Ajuste la hauteur pour compenser */
+        padding-top: 170px; /* Augmente pour dégager le bouton */
+        height: calc(100vh - 170px); /* Ajuste la hauteur pour compenser */
     }
 }
