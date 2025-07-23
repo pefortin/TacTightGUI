@@ -1,4 +1,4 @@
-const API_BASE_URL = 'api/';
+const API_BASE_URL = 'api';
 
 // Force and thickness data for interpolation
 const forces_4mm = [4.92, 6.18, 7.61, 9.42, 10.40];
@@ -536,7 +536,7 @@ async function handleContactFormSubmit(event) {
         console.log('🔄 Sending contact form...', contactData);
         
         // Call the backend contact endpoint with the correct data structure
-        const response = await fetch(`${API_BASE_URL}contact`, {
+        const response = await fetch(`${API_BASE_URL}/contact`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
