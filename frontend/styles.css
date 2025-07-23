@@ -2651,8 +2651,8 @@ body {
     body {
         padding-top: 80px; /* hauteur de .top-nav */
     }
-    .hero-section {
-        padding-top: 110px; /* Augmente le padding pour dégager le bouton */
-        height: calc(100vh - 110px); /* Ajuste la hauteur pour compenser */
+     .hero-section {
+        padding-top: 140px; /* Augmente pour dégager le bouton */
+        height: calc(100vh - 140px); /* Ajuste la hauteur pour compenser */
     }
 }
