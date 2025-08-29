@@ -42,7 +42,7 @@ hapstitrap/
 
 - Python 3.8+ for backend
 - Node.js 14+ for frontend (optional)
-- Docker and Docker Compose (optional, recommended)
+- Docker and Docker Compose (optional, recommended) config
 
 ## Installation and Launch
 
@@ -55,7 +55,7 @@ docker-compose up --build
 # TO Stop Docker Compose
 docker-compose down
 ```
-
+   
 **The API will be available at: `http://localhost:8000`**
 
 **The frontend will be available at: `http://localhost:3000`**
