@@ -7,7 +7,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const API_URL = process.env.API_URL || 'http://127.0.0.1:8010';
+const API_URL = process.env.API_URL || 'http://backend:8000';
 
 // Configuration de sécurité
 app.use(helmet({
@@ -20,7 +20,7 @@ app.use(compression());
 
 // Configuration CORS
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: ['http://127.0.0.1:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: false
@@ -93,7 +93,7 @@ app.use((req, res) => {
 
 // Démarrage du serveur
 app.listen(PORT, () => {
-    console.log(`🚀 Haptistrap Frontend Server running on http://localhost:${PORT}`);
+    console.log(`🚀 Haptistrap Frontend Server running on http://127.0.0.1:${PORT}`);
     console.log(`📡 Proxying API calls to: ${API_URL}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`📁 Serving static files from: ${__dirname}`);

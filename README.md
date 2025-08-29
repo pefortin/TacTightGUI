@@ -27,15 +27,14 @@ hapstitrap/
 │   ├── TacTight.scad        # Launch Tactight install on docker
 │   ├── baseFiles            # Contain data for STL
 │   ├── output               # Store STL file generated
-│   ├── Dockerfile           # Backend Docker configuration
-│   └── docker-compose.yml   # Docker orchestration
+│   └── Dockerfile           # Backend Docker configuration
 ├── frontend/
 │   ├── index.html          # Main interface
 │   ├── styles.css          # CSS styles
 │   ├── script.js           # JavaScript logic
 │   ├── server.js           # Node.js server with proxy
-│   ├── Dockerfile          # Backend Docker configuration
-│   └── docker-compose.yml  # Docker orchestration
+│   └── Dockerfile          # Backend Docker configuration
+└── docker-compose.yml   # Docker orchestration
 └── README.md               # Documentation
 ```
 
@@ -47,35 +46,17 @@ hapstitrap/
 
 ## Installation and Launch
 
-### Option 1: Launch Launch the Backend
+### Option : Launch project
 
 ```bash
-# From the backend directory
-cd backend
-
-# Launch with Docker Compose
-docker-compose up --build
-
-# The API will be available at http://localhost:8000
-
-# TO Stop Docker Compose
-docker-compose down
-```
-
-**The backend will be available at: `http://localhost:8010`**
-
-#### 2. Launch the Frontend
-
-```bash
-# From the frontend directory
-cd frontend
-
 # Launch with Docker Compose
 docker-compose up --build
 
 # TO Stop Docker Compose
 docker-compose down
 ```
+
+**The API will be available at: `http://localhost:8000`**
 
 **The frontend will be available at: `http://localhost:3000`**
 

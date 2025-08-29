@@ -18,7 +18,6 @@ import logging
 from dotenv import load_dotenv
 
 
-
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -32,12 +31,6 @@ app = FastAPI()
 app.add_middleware(
 CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000", 
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-        "http://localhost:8080",
-        "http://127.0.0.1:8080",
         "*"  # Garde ceci en dernier recours
     ],
     allow_credentials=True,
@@ -56,7 +49,7 @@ app.add_middleware(SlowAPIMiddleware)
 async def root():
     return {"message": "Haptistrap API is running"}
 
-@app.get("/api/generate-stl/")  # Ajouter cette route pour gérer les requêtes avec /api/
+@app.get("/generate-stl/")  # Ajouter cette route pour gérer les requêtes avec /api/
 @limiter.limit("1/20 seconds")
 async def generate_stl(
     request: Request,

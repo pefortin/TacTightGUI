@@ -1,7 +1,0 @@
-services:
-  app:
-    build: .
-    ports:
-      - "8010:8000" 
-    volumes:
-      - ./output:/backend/output  # Volume persistant pour les fichiers STL
