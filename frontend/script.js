@@ -1,4 +1,4 @@
-const API_BASE_URL = 'api/';
+const API_BASE_URL = 'api';
 
 // Force and thickness data for interpolation
 const forces_4mm = [4.92, 6.18, 7.61, 9.42, 10.40];
@@ -536,7 +536,7 @@ async function handleContactFormSubmit(event) {
         console.log('🔄 Sending contact form...', contactData);
         
         // Call the backend contact endpoint with the correct data structure
-        const response = await fetch(`${API_BASE_URL}contact`, {
+        const response = await fetch(`${API_BASE_URL}/contact`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -665,6 +665,13 @@ function closeImageModal() {
     }, 300);
 }
 
+function toggleMobileNav() {
+    const navLinks = document.querySelector('.nav-links');
+    const navToggle = document.querySelector('.nav-toggle');
+    navLinks.classList.toggle('mobile-active');
+    navToggle.classList.toggle('active');
+}
+
 // Close modal with Escape key
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
@@ -680,6 +687,17 @@ document.addEventListener('DOMContentLoaded', function() {
             event.stopPropagation();
         });
     }
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            const navToggle = document.querySelector('.nav-toggle');
+            if (navLinks.classList.contains('mobile-active')) {
+                navLinks.classList.remove('mobile-active');
+                navToggle.classList.remove('active');
+            }
+        });
+    });
 });
 
 

@@ -24,13 +24,17 @@ hapstitrap/
 ├── backend/
 │   ├── main.py              # FastAPI API
 │   ├── requirements.txt     # Python backend dependencies
-│   ├── Dockerfile          # Backend Docker configuration
-│   └── docker-compose.yml  # Docker orchestration
+│   ├── TacTight.scad        # Launch Tactight install on docker
+│   ├── baseFiles            # Contain data for STL
+│   ├── output               # Store STL file generated
+│   └── Dockerfile           # Backend Docker configuration
 ├── frontend/
 │   ├── index.html          # Main interface
 │   ├── styles.css          # CSS styles
 │   ├── script.js           # JavaScript logic
-│   └── server.js           # Node.js server with proxy
+│   ├── server.js           # Node.js server with proxy
+│   └── Dockerfile          # Backend Docker configuration
+└── docker-compose.yml   # Docker orchestration
 └── README.md               # Documentation
 ```
 
@@ -42,40 +46,17 @@ hapstitrap/
 
 ## Installation and Launch
 
-### Option 1: Launch with Docker (Recommended)
+### Option : Launch project
 
 ```bash
-# From the backend directory
-cd backend
-
 # Launch with Docker Compose
 docker-compose up --build
 
-# The API will be available at http://localhost:8000
-
-# Stop Docker Compose
+# TO Stop Docker Compose
 docker-compose down
 ```
 
-**The backend will be available at: `http://localhost:8000`**
-**API Documentation: `http://localhost:8000/docs`**
-
-#### 2. Launch the Frontend
-
-**Option A: With integrated Node.js server (Recommended)**
-
-```bash
-# From the frontend directory
-cd frontend
-
-# Install Node.js dependencies
-npm install
-
-# Launch server with integrated proxy
-npm start
-# or
-node server.js
-```
+**The API will be available at: `http://localhost:8000`**
 
 **The frontend will be available at: `http://localhost:3000`**
 
@@ -83,9 +64,8 @@ node server.js
 
 ### Local Development
 
-- Backend API: `http://localhost:8000`
+- Backend API: `http://localhost:8010`
 - Frontend: `http://localhost:3000`
-- The frontend uses a proxy to `/api/` which redirects to the backend
 
 ## Features
 
@@ -124,7 +104,7 @@ frontend/script.js       # Logic and interactions
 
 # Configuration
 backend/docker-compose.yml  # Docker services
-frontend/server.js          # Server with proxy
+frontend/docker-compose.yml  # Docker services
 ```
 
 ### Development Mode
@@ -137,7 +117,7 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 # Frontend with auto-reload
 cd frontend
 # Use a server with live-reload like:
-npx live-server --port=3000 --proxy=/api:http://localhost:8000
+npx live-server --port=3000 --proxy=/api:http://localhost:8010
 ```
 
 ## Technologies Used

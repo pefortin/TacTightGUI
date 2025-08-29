@@ -2643,3 +2643,43 @@ body {
     }
 }
 
+
+/* Ajoute ceci à la fin du fichier ou dans la section responsive mobile */
+@media (max-width: 768px) {
+    .nav-links.mobile-active {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        width: 100vw;
+        background: rgba(255,255,255,0.98);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        z-index: 2000;
+        gap: 0;
+        padding: 0;
+        border-bottom: 1px solid #eee;
+        animation: fadeIn 0.3s;
+    }
+    .nav-links.mobile-active li {
+        width: 100%;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    .nav-links.mobile-active a {
+        padding: 18px 30px;
+        width: 100%;
+        display: block;
+    }
+}
+
+/* Fix for mobile: add padding-top to body so TacTight is always visible */
+@media (max-width: 768px) {
+    body {
+        padding-top: 80px; /* hauteur de .top-nav */
+    }
+    .hero-section {
+        padding-top: 80px; /* juste la nav, pas le carousel */
+        height: calc(100vh - 80px);
+    }
+}

@@ -7,7 +7,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const API_URL = process.env.API_URL || 'http://127.0.0.1:8000';
+const API_URL = process.env.API_URL || 'http://backend:8000';
 
 // Configuration de sécurité
 app.use(helmet({
@@ -20,7 +20,7 @@ app.use(compression());
 
 // Configuration CORS
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: ['http://127.0.0.1:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: false
@@ -37,15 +37,12 @@ app.use('/api', createProxyMiddleware({
     pathRewrite: {
         '^/api': '', // Enlever /api du chemin
     },
+    logLevel: 'debug', // Ajouter pour debug
     onProxyReq: (proxyReq, req, res) => {
-        console.log(`🔄 Proxying ${req.method} ${req.url} to ${API_URL}`);
+        console.log(`🔄 Original URL: ${req.url}`);
+        console.log(`🔄 Proxying ${req.method} to ${API_URL}${proxyReq.path}`);
     },
     onProxyRes: (proxyRes, req, res) => {
-        // Ajouter les headers CORS à la réponse du proxy
-        proxyRes.headers['Access-Control-Allow-Origin'] = '*';
-        proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
-        proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Accept';
-        
         console.log(`✅ Response from ${req.url}: ${proxyRes.statusCode}`);
     },
     onError: (err, req, res) => {
@@ -96,7 +93,7 @@ app.use((req, res) => {
 
 // Démarrage du serveur
 app.listen(PORT, () => {
-    console.log(`🚀 Haptistrap Frontend Server running on http://localhost:${PORT}`);
+    console.log(`🚀 Haptistrap Frontend Server running on http://127.0.0.1:${PORT}`);
     console.log(`📡 Proxying API calls to: ${API_URL}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`📁 Serving static files from: ${__dirname}`);
@@ -112,3 +109,4 @@ process.on('SIGINT', () => {
     console.log('🛑 SIGINT received, shutting down gracefully');
     process.exit(0);
 });
+
