@@ -64,7 +64,7 @@ docker-compose down
 
 ### Local Development
 
-- Backend API: `http://localhost:8010`
+- Backend API: `http://localhost:8000`
 - Frontend: `http://localhost:3000`
 
 ## Features
