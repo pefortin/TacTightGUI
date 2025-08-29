@@ -42,7 +42,7 @@ hapstitrap/
 
 - Python 3.8+ for backend
 - Node.js 14+ for frontend (optional) 
-- Docker and Docker Compose (optional, recommended)
+- Docker and Docker Compose (optional, recommended) test
 
 ## Installation and Launch
 
